@@ -4,7 +4,7 @@ function (lev)
     y <- 1:length(lev)
     nlev <- nlevels(factor(lev))
     nl <- 1:nlev
-    x <- NULL
+    x <- list()
     for (i in 1:nlev) x[[i]] <- y[lev == i]
     dum <- sample(nl)
     return(unlist(x[dum]))
@@ -37,7 +37,7 @@ function (lev)
     y <- 1:length(lev)
     nlev <- nlevels(factor(lev))
     nl <- as.integer(factor(lev))
-    x <- NULL
+    x <- list()
     for (i in 1:nlev) x[[i]] <- sample(y[nl == i])
     return(unlist(x))
 }

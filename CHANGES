@@ -1,0 +1,8 @@
+#version 0.02
+
+The function test.between, test.between.within and test.within now sort the data before doing the resampling. This avoids errors when the vector within, rand.unit and test.lev are not sorted. 
+
+In function test.between and test.between.within, the vector rand.unit is transformed such that the different units are numbered consecutively
+
+#version 0.02.2
+in samp.between and samp.within, changed x<-NULL (which caused mesage Error: more elements supplied than there are to replace) into x<-list().  

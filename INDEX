@@ -1,8 +1,8 @@
 exhier                  Example data set with 4 levels, one diploid
                         and one haploid locus
-g.stats.glob            Likelihood ratio G-statistic over loci
 g.stats                 Calculates likelihood-ratio G-statistic on
                         contingency table
+g.stats.glob            Likelihood ratio G-statistic over loci
 genot2al                Separates diploid genotypes in its constituant
                         alleles
 gtrunchier              Genotypes at 6 microsatellite loci of Galba
@@ -26,8 +26,8 @@ test.g                  Tests the significance of the effect of level
 test.within             Tests the significance of the effect of
                         inner.level on genetic differentiation within
                         blocks defined by outer.level
-varcomp.glob            Estimate variance components and hierarchical
-                        F-statistics over all loci
 varcomp                 Estimates variance components for each allele
                         of a locus
+varcomp.glob            Estimate variance components and hierarchical
+                        F-statistics over all loci
 yangex                  Example data set from Yang (1998) appendix
