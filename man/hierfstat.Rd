@@ -6,6 +6,8 @@
 }
 
 \references{
+Goudet J. (2005). Hierfstat, a package for R to compute and test variance components and F-statistics. Molecular Ecology Notes. 5:184-186
+
 Goudet J., Raymond, M., DeMeeus, T. and Rousset F. (1996) Testing differentiation in diploid populations. Genetics. 144: 1933-1940
 
 Weir, B.S. (1996) Genetic Data Analysis II. Sinauer Associates.

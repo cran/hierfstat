@@ -21,11 +21,11 @@ to the innermost before the individual. the last column of the data frame 'data'
 \details{The format for genotypes is simply the code for the 2 alleles put one behind the other, without space in between. For instance if allele 1 at the locus has code \kbd{23} and allele 2 \kbd{39}, the genotype format is \kbd{2339}. 
 }
 \references{
+Goudet J. (2005). Hierfstat, a package for R to compute and test variance components and F-statistics. Molecular Ecology Notes. 5:184-186
+
 Weir, B.S. (1996) Genetic Data Analysis II. Sinauer Associates.
 
 Yang, R.C. (1998). Estimating hierarchical F-statistics. Evolution 52(4):950-956
-
-Goudet J. (2005). Hierfstat, a package for R to compute and test variance components and F-statistics. Molecular Ecology Notes. 5:184-186
 }
 \author{Jerome Goudet,
 DEE, UNIL, 

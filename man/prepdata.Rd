@@ -12,7 +12,7 @@ prepdata(data)
 a reoredered,renumbered and sorted data frame 
  }
 \references{
-Goudet J. (2004). A library for R to compute and test variance components and F-statistics. In Prep
+Goudet J. (2005). Hierfstat, a package for R to compute and test variance components and F-statistics. Molecular Ecology Notes. 5:184-186
 }
 \seealso{\code{\link{varcomp}}.}
 \examples{
