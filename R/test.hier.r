@@ -8,7 +8,8 @@ function (data = data, test.lev, rand.unit, nperm = 100, ...)
     data<-data.frame(data[x,])
     test.lev<-test.lev[x]
     rand.unit<-rand.unit[x]
-    runit<-rep(1:dim(table(rand.unit)),c(table(rand.unit)))
+    runit<-paste(test.lev,rand.unit,sep="")
+    runit<-rep(1:dim(table(runit)),c(table(runit)))
     nobs <- length(runit)
     perm.stat <- vector(length = nperm)
     perm.stat[nperm] <- get.g(test.lev, data, ...)
@@ -31,12 +32,15 @@ function (data = data, within, test.lev, rand.unit, nperm = 100,
     within<-within[x]
     test.lev<-test.lev[x]
     rand.unit<-rand.unit[x]
-    
+    tlev<-paste(within,test.lev,sep="")#
+    runit<-paste(tlev,rand.unit,sep="")#
+    tlev<-rep(1:dim(table(tlev)),c(table(tlev)))
+    runit<-rep(1:dim(table(runit)),c(table(runit)))
     nobs <- length(test.lev)
     perm.stat <- vector(length = nperm)
-    perm.stat[nperm] <- get.g(test.lev, data, ...)
+    perm.stat[nperm] <- get.g(tlev, data, ...)
     for (i in 1:(nperm - 1)) {
-        perm.stat[i] <- get.g(test.lev, data[samp.between.within(inner.lev = rand.unit, 
+        perm.stat[i] <- get.g(tlev, data[samp.between.within(inner.lev = runit, 
             outer.lev = within), ], ...)
     }
     list(g.star = perm.stat, p.val = sum(perm.stat >= perm.stat[nperm])/nperm)
@@ -66,12 +70,13 @@ function (data = data, within, test.lev, nperm = 100, ...)
     data<-data.frame(data[x,])
     within<-within[x]
     test.lev<-test.lev[x]
-    
+    tlev<-paste(within,test.lev,sep="")
+    tlev<-rep(1:dim(table(tlev)),c(table(tlev)))
     nobs <- length(test.lev)
     perm.stat <- vector(length = nperm)
-    perm.stat[nperm] <- get.g(test.lev, data, ...)
+    perm.stat[nperm] <- get.g(tlev, data, ...)
     for (i in 1:(nperm - 1)) {
-        perm.stat[i] <- get.g(test.lev, data[samp.within(within), 
+        perm.stat[i] <- get.g(tlev, data[samp.within(within), 
             ], ...)
     }
     list(g.star = perm.stat, p.val = sum(perm.stat >= perm.stat[nperm])/nperm)

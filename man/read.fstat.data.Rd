@@ -28,7 +28,7 @@ a data frame containing the desired data, in a format adequate to pass to \kbd{v
 \references{
 Goudet J. (1995). FSTAT (Version 1.2): A computer program to calculate F- statistics. Journal of Heredity 86:485-486
 
-Goudet J. (2004). A library for R to compute and test variance components and F-statistics. In Prep
+Goudet J. (2005). Hierfstat, a package for R to compute and test variance components and F-statistics. Molecular Ecology Notes. 5:184-186
 }
 \examples{
 read.fstat.data(paste(.path.package("hierfstat"),"/data/diploid.dat",sep="",collapse=""),nloc=5)

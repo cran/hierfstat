@@ -6,3 +6,8 @@ In function test.between and test.between.within, the vector rand.unit is transf
 
 #version 0.02.2
 in samp.between and samp.within, changed x<-NULL (which caused mesage Error: more elements supplied than there are to replace) into x<-list().  
+
+#version 0.03-1
+in varcomp.glob, added diploid as a parameter passed to varcomp. Absence of this option caused the function to report an error message when the data were haploid
+Changes were made to functions test.between, test.between.within and test.within. The vector rand.unit and test.lev are transformed such that the different units are numbered consecutively
+Updated the reference list

@@ -21,7 +21,7 @@ data(gtrunchier)
 \references{
 Trouve S., L. Degen et al. (2000) Microsatellites in the hermaphroditic snail, Lymnaea truncatula, intermediate host of the liver fluke, Fasciola hepatica.Molecular Ecology 9: 1662-1664.
 
-Trouve S., Degen L. and Goudet J. (2004) Ecological components and evolution of selfing in the freshwater snail Galba truncatula. Journal of Evolutionary Biology. In Press
+Trouve S., Degen L. and Goudet J. (2005) Ecological components and evolution of selfing in the freshwater snail Galba truncatula. Journal of Evolutionary Biology. 18, 358-370
 }
 \keyword{datasets}
 

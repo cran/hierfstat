@@ -17,7 +17,7 @@ g.stats(data,diploid=TRUE)}
 \references{
 Goudet J., Raymond, M., DeMeeus, T. and Rousset F. (1996) Testing differentiation in diploid populations. Genetics. 144: 1933-1940
 
-Goudet, J. (2004). A library for R to compute and test variance components and F-statistics.
+Goudet J. (2005). Hierfstat, a package for R to compute and test variance components and F-statistics. Molecular Ecology Notes. 5:184-186
 
 Petit E., Balloux F. and Goudet J.(2001) Sex-biased dispersal in a migratory bat: A characterization using sex-specific demographic parameters. Evolution 55: 635-640. 
 

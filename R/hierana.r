@@ -193,10 +193,10 @@ function (levels = levels, loci = loci, diploid = TRUE)
     if (diploid) {
         fnames <- c(fnames, "Ind")
     }
-    res <- varcomp(cbind(levels, loci[, 1]))$overall
+    res <- varcomp(cbind(levels, loci[, 1]),diploid)$overall
     nloc <- dim(loci)[2]
     for (i in 2:nloc) res <- rbind(res, varcomp(cbind(levels, 
-        loci[, i]))$overall)
+        loci[, i]),diploid)$overall)
     tot <- apply(res, 2, sum, na.rm = TRUE)
     nblevels <- length(tot)
     f <- matrix(rep(0, (nblevels - 1)^2), ncol = (nblevels - 
