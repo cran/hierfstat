@@ -1,0 +1,33 @@
+exhier                  Example data set with 4 levels, one diploid
+                        and one haploid locus
+g.stats.glob            Likelihood ratio G-statistic over loci
+g.stats                 Calculates likelihood-ratio G-statistic on
+                        contingency table
+genot2al                Separates diploid genotypes in its constituant
+                        alleles
+gtrunchier              Genotypes at 6 microsatellite loci of Galba
+                        truncatula from different patches in Western
+                        Switzerland
+hierfstat               General information on the hierfstat package
+prepdata                Sort and renumber and recode levels for the
+                        hierarchical analysis if necessary
+read.fstat.data         Reads data from a FSTAT file
+samp.between            Shuffles a sequence among groups defined by
+                        the input vector
+samp.between.within     Shuffles a sequence
+samp.within             Shuffles a sequence within groups defined by
+                        the input vector
+test.between            Tests the significance of the effect of
+                        test.lev on genetic differentiation
+test.between.within     Tests the significance of the effect of
+                        test.lev on genetic differentiation
+test.g                  Tests the significance of the effect of level
+                        on genetic differentiation
+test.within             Tests the significance of the effect of
+                        inner.level on genetic differentiation within
+                        blocks defined by outer.level
+varcomp.glob            Estimate variance components and hierarchical
+                        F-statistics over all loci
+varcomp                 Estimates variance components for each allele
+                        of a locus
+yangex                  Example data set from Yang (1998) appendix
