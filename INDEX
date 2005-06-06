@@ -1,3 +1,5 @@
+boot.vc                 Bootstrap confidence intervals for variance
+                        components
 exhier                  Example data set with 4 levels, one diploid
                         and one haploid locus
 g.stats                 Calculates likelihood-ratio G-statistic on

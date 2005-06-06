@@ -38,6 +38,6 @@ function (lev)
     nlev <- nlevels(factor(lev))
     nl <- as.integer(factor(lev))
     x <- list()
-    for (i in 1:nlev) x[[i]] <- sample(y[nl == i])
+    for (i in 1:nlev) if (length(y[nl==i])>1) x[[i]] <- sample(y[nl == i]) else x[[i]]<-y[nl==i]
     return(unlist(x))
 }

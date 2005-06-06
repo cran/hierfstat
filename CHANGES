@@ -20,3 +20,11 @@ updated some references
 #version 0.03-3
 
 Again fixed bugs in test.between, test.between.within and test.within. replaced as.integer(x) with as.integer(factor(x)) forcing consecutive numbering of factor levels. 
+
+#version 0.03-4
+
+fixed bug in samp.within, now it can handle lev with only one subgroup
+
+#version 0.04-1
+
+boot.vc now provides bootstrap CI for variance components.
