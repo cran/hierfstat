@@ -1,30 +1,35 @@
-#version 0.02
+#version 0.04-2
 
-The function test.between, test.between.within and test.within now sort the data before doing the resampling. This avoids errors when the vector within, rand.unit and test.lev are not sorted. 
+fixed a bug in genot2al when alleles were coded with 3 digits but with number not exceeding 9
 
-In function test.between and test.between.within, the vector rand.unit is transformed such that the different units are numbered consecutively
+#version 0.04-1
 
-#version 0.02.2
-in samp.between and samp.within, changed x<-NULL (which caused mesage Error: more elements supplied than there are to replace) into x<-list().  
+boot.vc now provides bootstrap CI for variance components.
 
-#version 0.03-1
-in varcomp.glob, added diploid as a parameter passed to varcomp. Absence of this option caused the function to report an error message when the data were haploid
-Changes were made to functions test.between, test.between.within and test.within. The vector rand.unit and test.lev are transformed such that the different units are numbered consecutively
-Updated the reference list
+#version 0.03-4
+
+fixed bug in samp.within, now it can handle lev with only one subgroup
+
+#version 0.03-3
+
+Again fixed bugs in test.between, test.between.within and test.within. replaced as.integer(x) with as.integer(factor(x)) forcing consecutive numbering of factor levels. 
 
 #version 0.03-2
 Again fixed bugs in test.between, test.between.within and test.within. No renumbering of factor levels, factors are just forced as integers and sorted once.
 
 updated some references
 
-#version 0.03-3
+#version 0.03-1
+in varcomp.glob, added diploid as a parameter passed to varcomp. Absence of this option caused the function to report an error message when the data were haploid
+Changes were made to functions test.between, test.between.within and test.within. The vector rand.unit and test.lev are transformed such that the different units are numbered consecutively
+Updated the reference list
 
-Again fixed bugs in test.between, test.between.within and test.within. replaced as.integer(x) with as.integer(factor(x)) forcing consecutive numbering of factor levels. 
+#version 0.02.2
+in samp.between and samp.within, changed x<-NULL (which caused message Error: more elements supplied than there are to replace) into x<-list().  
 
-#version 0.03-4
+#version 0.02
 
-fixed bug in samp.within, now it can handle lev with only one subgroup
+The function test.between, test.between.within and test.within now sort the data before doing the resampling. This avoids errors when the vector within, rand.unit and test.lev are not sorted. 
 
-#version 0.04-1
+In function test.between and test.between.within, the vector rand.unit is transformed such that the different units are numbered consecutively
 
-boot.vc now provides bootstrap CI for variance components.

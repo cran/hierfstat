@@ -1,7 +1,7 @@
 boot.vc                 Bootstrap confidence intervals for variance
                         components
-exhier                  Example data set with 4 levels, one diploid
-                        and one haploid locus
+exhier                  Example data set with 4 levels, one diploid and
+                        one haploid locus
 g.stats                 Calculates likelihood-ratio G-statistic on
                         contingency table
 g.stats.glob            Likelihood ratio G-statistic over loci
@@ -14,8 +14,8 @@ hierfstat               General information on the hierfstat package
 prepdata                Sort and renumber and recode levels for the
                         hierarchical analysis if necessary
 read.fstat.data         Reads data from a FSTAT file
-samp.between            Shuffles a sequence among groups defined by
-                        the input vector
+samp.between            Shuffles a sequence among groups defined by the
+                        input vector
 samp.between.within     Shuffles a sequence
 samp.within             Shuffles a sequence within groups defined by
                         the input vector

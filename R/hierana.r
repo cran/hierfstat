@@ -56,7 +56,10 @@ function (y)
     else {
         if (max(y, na.rm = TRUE) <= 10000) {
             modulo <- 100
-        }
+            d1<-y%/%modulo
+            d2<-y%%modulo
+            if (min(d1,na.rm=TRUE)>9 & max(d2,na.rm=TRUE)<10) modulo<-1000
+         }
         else modulo <- 1000
     }
     al1 <- y%/%modulo
