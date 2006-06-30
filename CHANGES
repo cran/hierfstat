@@ -1,3 +1,6 @@
+#version 0.04-3 30.06.2006
+fixed a bug in boot.vc, now the function removes monomorphic loci before carrying out the bootstrap, and gives an error message if the number of polymorphic loci is less than 5
+
 #version 0.04-2
 
 fixed a bug in genot2al when alleles were coded with 3 digits but with number not exceeding 9
