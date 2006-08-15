@@ -70,8 +70,9 @@ function (y)
 "prepdata" <-
 function (data) 
 {
+#remove calls to names.data, apparently does not do anything
     nbl <- dim(data)[2]
-    names.data <- names(data)
+#    names.data <- names(data)
     x <- matrix(rep(0, dim(data)[1] * dim(data)[2]), ncol = dim(data)[2])
     for (i in nbl:2) {
         dumtext <- parse(text = paste("table(", paste("data[,", 
@@ -85,7 +86,7 @@ function (data)
     dum1 <- dum[dum > 0]
     x[, 1] <- rep(1:length(dum1), dum1)
     x <- data.frame(x)
-    names(x) <- names.data
+#    names(x) <- names.data
     return(x)
 }
 "read.fstat.data" <-

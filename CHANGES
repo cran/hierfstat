@@ -1,3 +1,7 @@
+#version 0.04-4 15.08.2006
+removed data frame names (names.data<-names(data)) in prepdata, caused a bug from R version 2.3.1 when only one level and does not seem to do anything
+
+
 #version 0.04-3 30.06.2006
 fixed a bug in boot.vc, now the function removes monomorphic loci before carrying out the bootstrap, and gives an error message if the number of polymorphic loci is less than 5
 
