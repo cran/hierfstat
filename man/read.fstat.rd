@@ -1,12 +1,12 @@
-\name{read.fstat.data}
-\alias{read.fstat.data}
+\name{read.fstat}
+\alias{read.fstat}
 \title{Reads data from a FSTAT file}
 \description{Imports a \emph{FSTAT} data file into R.
 The data frame created is made of \kbd{nl+1} columns, \kbd{nl} being the number of loci.
 The first column corresponds to the Population identifier,
 the following columns contains the genotypes of the individuals.}
 \usage{
-read.fstat.data(fname, na.s = c("0","00","000","0000","00000","000000","NA"))
+read.fstat(fname, na.s = c("0","00","000","0000","00000","000000","NA"))
 }
 \arguments{
 \item{fname}{a file in the FSTAT format (\url{http://www.unil.ch/popgen/softwares/fstat.htm}):
@@ -44,7 +44,7 @@ Goudet J. (1995). FSTAT (Version 1.2): A computer program to calculate F- statis
 Goudet J. (2005). Hierfstat, a package for R to compute and test variance components and F-statistics. Molecular Ecology Notes. 5:184-186
 }
 \examples{
-read.fstat.data(paste(.path.package("hierfstat"),"/extdata/diploid.dat",sep="",collapse=""))
+read.fstat(paste(.path.package("hierfstat"),"/extdata/diploid.dat",sep="",collapse=""))
 }
 
 \keyword{manip}

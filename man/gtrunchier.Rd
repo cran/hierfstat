@@ -6,7 +6,7 @@
 \usage{
 data(gtrunchier)
 }
-\format{
+\value{
 \item{Locality}{Identifier of the locality of origin}
 \item{Patch}{Identifier of the patch of origin}
 \item{L21.V}{Genotype at locus L21.V. For instance the first individual carries allele 2 and 2 at this locus \preformatted{gtrunchier\$L21.V[1]}}

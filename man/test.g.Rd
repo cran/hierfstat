@@ -1,7 +1,7 @@
 \name{test.g}
 \alias{test.g}
 \title{Tests the significance of the effect of level on genetic differentiation}
-\description{}
+\description{Tests the significance of the effect of \kbd{level} on genetic differentiation}
 \usage{
 test.g(data = data, level, nperm = 100,...)
 }

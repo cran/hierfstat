@@ -2,11 +2,11 @@
 \docType{data}
 \alias{exhier}
 \title{Example data set with 4 levels, one diploid and one haploid locus}
-\description{}
+\description{Example data set with 4 levels, one diploid and one haploid locus}
 \usage{
 data(exhier)
 }
-\format{
+\value{
 \item{lev1}{outermost level}
 \item{lev2}{level 2}
 \item{lev3}{Level 3}

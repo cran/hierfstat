@@ -1,7 +1,7 @@
 \name{test.within}
 \alias{test.within}
 \title{Tests the significance of the effect of inner.level on genetic differentiation within blocks defined by outer.level}
-\description{}
+\description{Tests the significance of the effect of inner.level on genetic differentiation within blocks defined by outer.level}
 \usage{
 test.within(data, within, test.lev, nperm, ...)
 }

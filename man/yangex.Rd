@@ -7,7 +7,7 @@ The genotype (column genot) is invented}
 \usage{
 data(exhier)
 }
-\format{
+\value{
 \item{pop}{outermost level}
 \item{spop}{sub pop level}
 \item{sspop}{sub sub pop level}

@@ -1,7 +1,7 @@
 \name{test.between}
 \alias{test.between}
 \title{Tests the significance of the effect of test.lev on genetic differentiation}
-\description{}
+\description{Tests the significance of the effect of test.lev on genetic differentiation}
 \usage{
 test.between(data, test.lev, rand.unit, nperm, ...)
 }

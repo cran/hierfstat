@@ -72,8 +72,9 @@ function (data)
 {
 #remove calls to names.data, apparently does not do anything
     nbl <- dim(data)[2]
+    nbi <-dim(data)[1]
 #    names.data <- names(data)
-    x <- matrix(rep(0, dim(data)[1] * dim(data)[2]), ncol = dim(data)[2])
+    x <- matrix(numeric(nbi*nbl), ncol = nbl)
     for (i in nbl:2) {
         dumtext <- parse(text = paste("table(", paste("data[,", 
             i:2, "],", sep = "", collapse = ""), "data[,1])", 
@@ -89,16 +90,22 @@ function (data)
 #    names(x) <- names.data
     return(x)
 }
+
 "read.fstat.data" <-
-function (filename, nloc, na.s = "0") 
+function (fname, na.s = c("0","00","000","0000","00000","000000","NA"))
 {
-    lnames <- as.vector(read.table(filename, skip = 1, nrows = nloc)[, 
-        1])
-    lnames <- c("Pop", lnames)
-    dat <- read.table(filename, skip = nloc + 1, na.strings = na.s)
-    names(dat) <- lnames
-    return(dat)
+x<-scan(fname,n=4)
+nloc<-x[2]
+lnames<-scan(fname,what=character(),skip=1,nlines=nloc)
+lnames<-c("Pop",lnames)
+dat<-scan(fname,skip=nloc+1,na.strings=na.s)
+dat<-data.frame(matrix(dat,ncol=nloc+1,byrow=TRUE))
+names(dat)<-lnames
+return(dat)
 }
+
+
+
 "varcomp" <-
 function (data, diploid = TRUE) 
 {
