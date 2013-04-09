@@ -13,6 +13,7 @@ return(dat)
 ############################################################################################
 getal<-function(data){
         #transform a table of genotypes into a table of alleles
+		#following anders Goncalves suggestion, replaced nbpop<-max(dat[,1]) with length(unique(dat[,1]))
 x<-dim(data)
 if (max(data[,2],na.rm=TRUE)<1000000) modulo=1000
 if (max(data[,2],na.rm=TRUE)<10000) modulo<-100
@@ -20,8 +21,8 @@ if (max(data[,2],na.rm=TRUE)<100) modulo<-10
 firstal<-data[,-1] %/% modulo
 secal<-data[,-1] %% modulo
 ind<-vector(length=0)
-nbpop<-max(data[,1])
-for (i in 1:nbpop) {
+nbpop <- length(unique(data[,1]))
+for (i in unique(data[,1])) {
 dum<-1:sum(data[,1]==i)
 if (i==1) ind<-dum else ind<-c(ind,dum)
 }
@@ -47,29 +48,23 @@ return(y)
 #########################################################################
 pop.freq<-function(data,diploid=TRUE)
 {
-nbpop<-max(data[,1])
-if (diploid) data<-getal(data)[,-2]
+nbpop<-length(unique(data[,1]))
 nbloc<-dim(data)[2]-1
-fun<-function(x){
+if (diploid) {
+data<-data.frame(data,dummy.loc=sample(101:999,replace=TRUE,size=dim(data)[1])*1001) #to ensure proper output
+data<-getal(data)[,-2]
+}
+else{
+data<-data.frame(data,dummy.loc=sample(101:999,replace=TRUE,size=dim(data)[1]))
+}
+freq<-function(x){
   dum<-table(x,data[,1])
   eff<-apply(dum,2,sum,na.rm=TRUE)
   freq<-sweep(dum,2,eff,FUN="/")
 }
 ndat<-data[,-1]
-if (is.data.frame(ndat)){
-all.freq<-apply(ndat,2,fun)}
-else all.freq<-fun(ndat)
-if (!is.list(all.freq))
-{
-my.dim<-dim(table(data[,2],data[,1]))
-my.names<-dimnames(all.freq)[[2]]
-dum<-list(nbloc)
-for (i in seq_along(my.names)){
-dum[[i]]<-matrix(all.freq[,i],nrow=my.dim[1])
-}
-names(dum)<-my.names
-all.freq<-dum
-}
+all.freq<-apply(ndat,2,freq)
+all.freq<-all.freq[-(nbloc+1)]
 return(all.freq)
 }
 #########################################################################
@@ -84,7 +79,7 @@ ind.count<-function(data){
 #########################################################################
 allele.count<-function(data,diploid=TRUE)
 {
-nbpop<-max(data[,1])
+nbpop<-length(unique(data[,1]))
 if (diploid) data<-getal(data)[,-2]
 nbloc<-dim(data)[2]-1
 fun<-function(x){
@@ -139,6 +134,7 @@ return(list(min.all=min.n,Ar=Ar))
 
 #########################################################################
 basic.stats<-function(data,diploid=TRUE,digits=4){
+# TODO : define class and print and plot functions for basic.stats
 loc.names<-names(data)[-1]
 
 p<-pop.freq(data,diploid)
@@ -186,19 +182,30 @@ Dstp<-np/(np-1)*Dst
 Htp=mHs+Dstp
 Fst=Dst/Ht
 Fstp=Dstp/Htp
-Dest<-Dstp/(1-mHs)*np/(np-1)
+Dest<-Dstp/(1-mHs)#*np/(np-1)
 res<-data.frame(cbind(mHo,mHs,Ht,Dst,Htp,Dstp,Fst,Fstp,mFis,Dest))
 names(res)<-c("Ho","Hs","Ht","Dst","Htp","Dstp","Fst","Fstp","Fis","Dest")
+if (diploid){
 rownames(sHo)<-loc.names
 rownames(Fis)<-loc.names
+}
+
 overall<-apply(res,2,mean,na.rm=TRUE)
 overall[7]<-overall[4]/overall[3]
 overall[8]<-overall[6]/overall[5]
 overall[9]<-1-overall[1]/overall[2]
 overall[10]<-overall[6]/(1-overall[2])
-return(list(n.ind.samp=n,pop.freq=lapply(p,round,digits),
+names(overall)<-names(res)
+all.res<-list(n.ind.samp=n,pop.freq=lapply(p,round,digits),
 Ho=round(sHo,digits),Hs=round(Hs,digits),Fis=round(Fis,digits),
-perloc=round(res,digits),overall=round(overall,digits)))
+perloc=round(res,digits),overall=round(overall,digits))
+class(all.res)<-"bas.stats"
+all.res
+
+}
+print.bas.stats<-function(x,...){
+print(list(perloc=x$perloc,overall=x$overall))
+invisible(x)
 }
 #########################################################################
 wc<-function(ndat,diploid=TRUE,pol=0.0){
@@ -208,7 +215,16 @@ wc<-function(ndat,diploid=TRUE,pol=0.0){
 #setting pol=0.0 will use all loci
 # the pol argument is not yet used
 #need to modify function to properly handle haploid data
-
+cl<-match.call()
+if (!diploid) {
+dum<-ndat[,-1]
+nd<-max(dum,na.rm=T)
+modu<-1000
+if (nd<10) modu<-10
+if(nd<100) modu<-100
+dum<-dum*modu+dum
+ndat<-data.frame(ndat[,1],dum)
+}
 
 #bs<-basic.stats(ndat,diploid)
 pop<-ndat[,1]
@@ -311,12 +327,25 @@ tsigw<-sum(sigw,na.rm=TRUE)
 tFST<-Fxy(c(tsiga,tsigb,tsigw))
 tFIS<-Fxy(c(tsigb,tsigw))
 
-
-return(list(sigma=cbind(loc,siga,sigb,sigw),
+res<-list(call=cl,sigma=cbind(loc,siga,sigb,sigw),
 sigma.loc=sigloc,
 per.al=list(FST=FST.pal,FIS=FIS.pal),
 per.loc=list(FST=lFST,FIS=lFIS),
-FST=tFST,FIS=tFIS))
+FST=tFST,FIS=tFIS)
+
+if (!diploid){
+res<-list(call=cl,sigma=cbind(loc,siga,sigb,sigw),
+sigma.loc=sigloc,
+per.al=list(FST=FST.pal),
+per.loc=list(FST=lFST),
+FST=tFST,FIS=NA)
+}
+class(res)<-"wc"
+res
+}
+print.wc<-function(x,...){
+print(list(perloc=x$per.loc,FST=x$FST,FIS=x$FIS))
+invisible(x)
 }
 ################################################################################
 pp.sigma.loc<-function(x,y,dat=dat,diploid=TRUE,...){
@@ -332,13 +361,14 @@ return(wc(ndat,diploid,...)$sigma.loc)
 pp.fst<-function(dat=dat,diploid=TRUE,...){
 cl<-match.call()
 Pop<-dat[,1]
-npop<-length(table(dat[,1]))
+npop<-length(unique(Pop))
 nloc<-dim(dat)[2]-1
 ppsl<-array(numeric(npop*npop*nloc*3),dim=c(npop,npop,nloc,3))
 for (i in 1:(npop-1))
 for (j in (i+1):npop){
 #cat(i," ",j,"\n") #for debugging
-ppsl[i,j,,]<-as.matrix(pp.sigma.loc(i,j,dat,diploid,...))
+# TODO: optimize by using function for 2 pops only. Needs a new function
+ppsl[i,j,,]<-as.matrix(pp.sigma.loc(unique(Pop)[i],unique(Pop)[j],dat,diploid,...))
 }
 ovl<-apply(ppsl,c(1,2,4),sum)
 ppfst<-ovl[,,1]/apply(ovl,c(1,2),sum)
@@ -362,8 +392,8 @@ if(length(dim(dat))==2){
 npop<-length(table(dat[,1]))
 nloc<-dim(dat)[2]-1
 ppsl<-array(numeric(npop*npop*nloc*3),dim=c(npop,npop,nloc,3))
-for (i in 1:(npop-1))
-for (j in (i+1):npop){
+for (i in unique(dat[,1])[-npop])
+for (j in unique(dat[,1])[-1]){
 #cat(i," ",j,"\n") #for debugging
 ppsl[i,j,,]<-as.matrix(pp.sigma.loc(i,j,dat,diploid,...))
 }

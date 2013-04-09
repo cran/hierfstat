@@ -18,5 +18,8 @@
 \author{Jerome Goudet \email{jerome.goudet@unil.ch}}
 
 %\seealso{\code{\link{}}.}
-%\examples{}
+\examples{
+data(gtrunchier)
+pcoa(vec2mat(cfe.dist(gtrunchier[,-1])),col=rep(c("black","red","blue","yellow","orange","green"),c(5,5,4,5,5,5)))
+}
 

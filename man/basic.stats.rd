@@ -1,20 +1,25 @@
 \name{basic.stats}
 \alias{basic.stats}
+\alias{print.bas.stats}
 \title{Basic statistics}
 \description{Estimates individual counts, allelic frequencies, observed heterozygosities and genetic diversities per locus and population.
 Also Estimates mean observed heterozygosities, mean gene diversities within population Hs, Gene diversities overall Ht and corrected Htp, and Dst, Dstp.
 Finally, estimates Fst and Fstp as well as Fis following Nei (1987) per locus and overall loci}
-\usage{basic.stats(data,diploid=TRUE,digits=4)}
+\usage{basic.stats(data,diploid=TRUE,digits=4)
+\method{print}{bas.stats}(x,...)
+}
 \arguments{
 \item{data}{a data frame where the first column contains the population to which the different individuals belong, and the following columns contain the genotype of the individuals -one locus per column- }
 \item{diploid}{Whether individuals are diploids (default) or haploids}
 \item{digits}{how many digits to print out in the output (default is 4)}
+\item{x}{an object of class bas.stats}
+\item{...}{further arguments to pass to print.bas.stats}
 }
 
 \value{
 \item{n.ind.samp}{A table --with np (number of populations) columns and nl (number of loci) rows-- of genotype counts}
 \item{pop.freq}{A list containing allele frequencies. Each element of the list is one locus.
-For each locus, Populations are in rows and alleles in column}
+For each locus, Populations are in columns and alleles in rows}
 \item{Ho}{A table --with np (number of populations) columns and nl (number of loci) rows-- of observed heterozygosities}
 \item{Hs}{A table --with np (number of populations) columns and nl (number of loci) rows-- of observed gene diversities}
 \item{Fis}{A table --with np (number of populations) columns and nl (number of loci) rows--of observed Fis}

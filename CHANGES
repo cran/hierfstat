@@ -1,3 +1,17 @@
+#version 0.04-10 09.04.2013
+-changed the help file for read.fstat and read.fstat.data so that the examples now call find.package rather than .find.package
+-added function to write fstat files, structure files, and sub-sampled individuals from populations
+-changed the printout of basic.stats, now an object
+-created a function (requiring ade4) indpca carrying out a PCA on individual allele frequencies
+-Fixed various other small bugs
+
+
+#version 0.04-9 04.10.2012
+modified bs and wc to allow for haploid data and for better output
+#version 0.04-8 30.07.2012
+modified getal and pp.fst to allow for non continuous numbering of populations
+#version 0.04-7 26.07.2012
+added beta.r for estimation of WH02 beta
 #version 0.04-6 23.11.2011
 cleaned up things to avoid warning messages
 #version 0.04-5 30.07.2010

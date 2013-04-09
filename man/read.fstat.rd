@@ -44,7 +44,7 @@ Goudet J. (1995). FSTAT (Version 1.2): A computer program to calculate F- statis
 Goudet J. (2005). Hierfstat, a package for R to compute and test variance components and F-statistics. Molecular Ecology Notes. 5:184-186
 }
 \examples{
-read.fstat(paste(.path.package("hierfstat"),"/extdata/diploid.dat",sep="",collapse=""))
+read.fstat(paste(path.package("hierfstat"),"/extdata/diploid.dat",sep="",collapse=""))
 }
 
 \keyword{manip}
