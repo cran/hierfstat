@@ -26,8 +26,9 @@ indpca(dat,ind.labels=NULL)
 }
 \author{Jerome Goudet \email{jerome.goudet@unil.ch}}
 \examples{
+##not run
 data(gtrunchier)
 x<-indpca(gtrunchier[,-2],ind.labels=gtrunchier[,2])
-plot.indpca(x,col=gtrunchier[,1],cex=0.7)
+plot(x,col=gtrunchier[,1],cex=0.7)
 }
 \keyword{multivariate}

@@ -20,6 +20,7 @@
 %\seealso{\code{\link{}}.}
 \examples{
 data(gtrunchier)
-pcoa(vec2mat(cfe.dist(gtrunchier[,-1])),col=rep(c("black","red","blue","yellow","orange","green"),c(5,5,4,5,5,5)))
+colo<-c("black","red","blue","yellow","orange","green")
+pcoa(vec2mat(cfe.dist(gtrunchier[,-1])),col=rep(colo,c(5,5,4,5,5,5)))
 }
 

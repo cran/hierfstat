@@ -13,12 +13,13 @@
 \item{betaw}{\eqn{\beta_w} are average over populations using (9) of WH2002}
 \item{betaii'}{\eqn{\beta_{ii'}} can be extracted with betas[1,,] etc...}
 }
+\details{These estimators assume alleles to be independant (i.e., random mating)}
 \references{Weir and Hill (2002) ESTIMATING F-STATISTICS. Annual review of Genetics. 36:721}
 \author{Jerome Goudet \email{jerome.goudet@unil.ch}}
 
 %\seealso{\code{\link{}}.}
 \examples{
-data(gtrunchier)
-betai(gtrunchier[,-2])
+dat<-sim.genot(size=100,N=c(100,1000,10000),nbloc=50,nbal=10)
+betai(dat)$betai 
 }
 \keyword{univar}

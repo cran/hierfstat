@@ -16,10 +16,10 @@
 \item{call}{function call}
 \item{fis.ci}{Bootstrap ci of Fis per population}
 }
-%\references{}
 \author{Jerome Goudet \email{jerome.goudet@unil.ch}}
 
-%\seealso{\code{\link{}}.}
-\examples{data(gtrunchier)
-boot.ppfis(gtrunchier[,-2])}
+\examples{
+dat<-sim.genot(nbpop=4,nbloc=20,nbal=10,f=c(0,0.2,0.4,0.6))
+boot.ppfis(dat)
+}
 \keyword{univar}

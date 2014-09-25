@@ -9,13 +9,13 @@ betai <- function(gendata){
 
 nloc <- dim(gendata)[2]-1
 npop <- dim(table(gendata[,1]))
-ninds <- ind.count(gendata)
+ninds <- 2*ind.count(gendata) #BEWARE! allele rather than genotype counts!
 p <- pop.freq(gendata)
 pb <- pop.freq(cbind(rep(1,dim(gendata)[1]),gendata[,-1]))
 n2 <- ninds^2
 n2 <- sweep(n2,2,apply(ninds,2,sum),FUN="/")
-nic <- ninds-n2
-snic <- apply(nic,2,sum)
+nic <- ninds-n2 #top of p729, WH2002
+snic <- apply(nic,2,sum) #sum over pop
 betas <- array(dim=c(npop,npop,nloc))
 nums <- array(dim=c(npop,npop,nloc))
 lden <- numeric(nloc)

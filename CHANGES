@@ -1,3 +1,14 @@
+#version 0.04-13 25.09.2014
+-Modified sim.genot to allow for different island sizes and independant inbreeding coefficient
+
+#version 0.04-12 06.02.2014
+-caught bugs in getal and getal.b relative to number of digits encoding alleles (1001-> modulo 1000 not 100)
+
+
+#version 0.04-11 31.10.2013
+-fixed a bug in boot.ppfst which stop the looping over populations to be carried out correctly
+-basic.stats can now take input from data set made of one sample only (a dummy extra line is added to the data set)
+
 #version 0.04-10 09.04.2013
 -changed the help file for read.fstat and read.fstat.data so that the examples now call find.package rather than .find.package
 -added function to write fstat files, structure files, and sub-sampled individuals from populations

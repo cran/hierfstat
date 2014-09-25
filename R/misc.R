@@ -14,9 +14,14 @@ return(dat)
 getal<-function(data){
         #transform a table of genotypes into a table of alleles
 		#following anders Goncalves suggestion, replaced nbpop<-max(dat[,1]) with length(unique(dat[,1]))
+		#caught exception when encoding alleles with more than 3 digits
+		#caught exception when encoding alleles with more than 3 digits but only using allele 1-9
 x<-dim(data)
-if (max(data[,2],na.rm=TRUE)<1000000) modulo=1000
-if (max(data[,2],na.rm=TRUE)<10000) modulo<-100
+if (max(data[,2],na.rm=TRUE)>1000000) stop("allele encoding with 3 digits maximum")
+if (max(data[,2],na.rm=TRUE)<1000000) modulo<-1000
+if (max(data[,2],na.rm=TRUE)<10000) {
+if (min(data[,2]%/%100,na.rm=TRUE)>=10 & max(data[,2]%%100,na.rm=TRUE)<10) modulo<-1000 else modulo<-100
+}
 if (max(data[,2],na.rm=TRUE)<100) modulo<-10
 firstal<-data[,-1] %/% modulo
 secal<-data[,-1] %% modulo
@@ -35,8 +40,11 @@ return(data.al)
 #########################################################################
 getal.b<-function(data){
 x<-dim(data)
-if (max(data[,1],na.rm=TRUE)<1000000) modulo=1000
-if (max(data[,1],na.rm=TRUE)<10000) modulo<-100
+if (max(data[,2],na.rm=TRUE)>1000000) stop("allele encoding with 3 digits maximum")
+if (max(data[,1],na.rm=TRUE)<1000000) modulo<-1000
+if (max(data[,2],na.rm=TRUE)<10000) {
+if (min(data[,2]%/%100,na.rm=TRUE)>=10 & max(data[,2]%%100,na.rm=TRUE)<10) modulo<-1000 else modulo<-100
+}
 if (max(data[,1],na.rm=TRUE)<100) modulo<-10
 firstal<-data %/% modulo
 secal<-data %% modulo
@@ -111,32 +119,35 @@ rownames(res)<-names(data)[-1]
 return(res)
 }
 ########################################################################
-allelic.richness<-function(data,min.n=NULL,diploid=TRUE){
- raref<-function(x){
- nn<-sum(x)
- dum<-choose(nn-x,min.n)/choose(nn,min.n)
- dum[is.na(dum)]<-0
- return(sum(1-dum))
- }
-
-nloc<-dim(data[,-1])[2]
-all.count<-allele.count(data,diploid)
-if (is.null(min.n)) {
-    min.n<-2*min(ind.count(data),na.rm=TRUE)
-    if (!diploid) {min.n<-min.n/2}
+allelic.richness<-function (data, min.n = NULL, diploid = TRUE) 
+{
+    raref <- function(x) {
+        nn <- sum(x)
+        dum <- choose(nn - x, min.n)/choose(nn, min.n)
+        dum[is.na(dum)] <- 0
+        return(sum(1 - dum))
+    }
+    nloc <- dim(data[, -1])[2]
+    all.count <- allele.count(data, diploid)
+    if (is.null(min.n)) {
+        min.n <- 2 * min(ind.count(data), na.rm = TRUE)
+        if (!diploid) {
+            min.n <- min.n/2
+        }
+    }
+    a <- lapply(all.count, fun1 <- function(x) apply(x, 2, raref))
+    Ar <- matrix(unlist(a), nrow = nloc, byrow = TRUE)
+    rownames(Ar) <- names(data)[-1]
+	mynas<-which(is.na(t(ind.count(data))))
+	Ar[mynas]<-NA
+    return(list(min.all = min.n, Ar = Ar))
 }
-
-a<-lapply(all.count,fun1<-function(x) apply(x,2,raref))
-Ar<-matrix(unlist(a),nrow=nloc,byrow=TRUE)
-rownames(Ar)<-names(data)[-1]
-return(list(min.all=min.n,Ar=Ar))
-}
-
 #########################################################################
 basic.stats<-function(data,diploid=TRUE,digits=4){
-# TODO : define class and print and plot functions for basic.stats
+# TODO : define plot functions for basic.stats
 loc.names<-names(data)[-1]
 
+if (length(table(data[,1]))<2) data[dim(data)[1]+1,1]<-2
 p<-pop.freq(data,diploid)
 n<-t(ind.count(data))
 if (diploid){
@@ -392,8 +403,8 @@ if(length(dim(dat))==2){
 npop<-length(table(dat[,1]))
 nloc<-dim(dat)[2]-1
 ppsl<-array(numeric(npop*npop*nloc*3),dim=c(npop,npop,nloc,3))
-for (i in unique(dat[,1])[-npop])
-for (j in unique(dat[,1])[-1]){
+x<-unique(dat[,1])
+for (i in x[-npop]) for (j in x[i+1]:x[npop]) {
 #cat(i," ",j,"\n") #for debugging
 ppsl[i,j,,]<-as.matrix(pp.sigma.loc(i,j,dat,diploid,...))
 }

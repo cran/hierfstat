@@ -8,12 +8,12 @@
 \item{nboot}{number of bootstraps}
 \item{quant}{the quantiles for bootstrapped ci}
 \item{diploid}{whether data are from diploid organisms}
-\item{dig}{numebr of digits to print}
+\item{dig}{numbers of digits to print}
 \item{...}{further arguments to pass to the function}
 }
 
 \value{
-\item{call}{}
+\item{call}{call to the function}
 \item{ll}{lower limit ci}
 \item{ul}{upper limit ci}
 \item{vc.per.loc}{for each pair of population, the variance components per locus}
