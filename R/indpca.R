@@ -4,7 +4,8 @@ indpca<-function(dat,ind.labels=NULL){
 #given a genotype data set dat
 #and individual labels lab
 #performs a PCA on individuals
-
+  if (is.genind(dat)) dat<-genind2hierfstat(dat)
+  
 indp<-pop.freq(cbind(1:dim(dat)[1],dat[,-1]))
 mati<-NULL
 for (i in 1:length(indp)) mati<-rbind(mati,indp[[i]])
@@ -36,6 +37,6 @@ if(eigen){
 par(mfrow=c(2,1))
 plot(x$ipca$eig/sum(x$ipca$eig),type="h",xlab="axes",ylab="Prop. variance")
 }
-plot(x$ipca$li[,ax1],x$ipca$li[,ax2],xlab="First axis",ylab="Second axis",type="n")
+plot(x$ipca$li[,ax1],x$ipca$li[,ax2],xlab=paste("Axis: ",ax1,sep=""),ylab=paste("Axis: ",ax2,sep=""),type="n")
 text(x$ipca$li[,ax1],x$ipca$li[,ax2],labels=x$ipca$rownames,...)
 }

@@ -2,7 +2,7 @@
 \alias{wc}
 \alias{print.wc}
 \title{Computes Weir and Cockrham estimates of Fstatistics}
-\description{Computes Weir and Cockrham estimates of Fstatistics}
+\description{Computes Weir and Cockerham estimates of Fstatistics}
 \usage{
 wc(ndat,diploid=TRUE,pol=0.0)
 

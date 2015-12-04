@@ -1,13 +1,7 @@
 #########################################################################
-wc<-function(ndat,diploid=TRUE,pol=0.0){
-
-#added argument pol to specify level of polymorhism wanted
-#if loci less polymorphic than pol, then they are left out of the calculations
-#setting pol=0.0 will use all loci
-# the pol argument is not yet used
-#need to modify function to properly handle haploid data
-cl<-match.call()
-if (is.genind(ndat)) ndat<-genind2hierfstat(ndat)
+wc2<-function(ndat,diploid=TRUE,pol=0.0){
+#specific for 2 populations only
+cl<-match.call()  
 if (!diploid) {
 dum<-ndat[,-1]
 nd<-max(dum,na.rm=T)
@@ -18,11 +12,9 @@ dum<-dum*modu+dum
 ndat<-data.frame(ndat[,1],dum)
 }
 
-#bs<-basic.stats(ndat,diploid)
 pop<-ndat[,1]
 ni<-length(pop)
-#polym<-which(bs$perloc$Ht>=pol,arr.ind=TRUE)
-dat<-ndat#[,c(1,polym+1)]
+dat<-ndat
 loc.names<-names(dat)[-1]
 n<-t(ind.count(dat))
 nt<-apply(n,1,sum,na.rm=TRUE)
@@ -36,14 +28,14 @@ if (length(untyped.loc)>0){
 }
 
 alploc<-nb.alleles(cbind(rep(1,ni),dat[,-1]))
-np<-dim(n)[2]
-npl<-apply(n,1,tempfun<-function(x) sum(!is.na(x))) #accounts for pops not typed for one locus
+np<-2
+npl<-apply(n,1,function(x) sum(!is.na(x))) #accounts for pops not typed for one locus
 nl<-dim(n)[1]
 p<-pop.freq(dat,diploid)
-pb<-pop.freq(cbind(rep(1,length(pop)),dat[,-1]),diploid)
-n<-matrix(unlist(n),ncol=np)
+pb<-pop.freq(cbind(rep(1,ni),dat[,-1]),diploid)
+n<-matrix(unlist(n),ncol=np) #why?
 nal<-n[rep(1:nl,alploc),]
-nc<-(nt-apply(n^2,1,sum,na.rm=TRUE)/nt)/(npl-1)
+nc<-(nt-apply(n^2,1,sum,na.rm=TRUE)/nt)/(npl-1) #what happens if npl=1?
 ntal<-rep(nt,alploc)
 ncal<-rep(nc,alploc)
 p<-matrix(unlist(lapply(p,t)),ncol=np,byrow=TRUE)
@@ -52,17 +44,17 @@ pb<-matrix(unlist(pb),ncol=1)
 
 if (diploid){
 dum<-getal.b(dat[,-1])
-all.loc<-apply(dum,2,function(y) as.numeric(dimnames(table(y))[[1]]))
+all.loc<-apply(dum,2,tempfun1<-function(y) as.numeric(dimnames(table(y))[[1]]))
 
-hetpl<-apply(dum,2,function(z){
+hetpl<-apply(dum,2,fun<-function(z){
 lapply(as.numeric(dimnames(table(z))[[1]]),
-function(y) apply(z==y,1,
-function(x) xor(x[1],x[2])))}
+who.is.het<-function(y) apply(z==y,1,
+ind.is.het<-function(x) xor(x[1],x[2])))}
 )
 
 mho<-lapply(hetpl,
-function(x) matrix(unlist(lapply(x,
-function(y) tapply(y,pop,sum,na.rm=TRUE))),ncol=np)
+tempfun2<-function(x) matrix(unlist(lapply(x,
+tempfun3<-function(y) tapply(y,pop,sum,na.rm=TRUE))),ncol=np)
 )
 mho<-matrix(unlist(mho),ncol=np,byrow=TRUE)
 mhom<-(2*nal*p-mho)/2
@@ -72,10 +64,10 @@ else mhom<-nal*p
 SSG<-apply(nal*p-mhom,1,sum,na.rm=TRUE)
 
 dum<-nal*(p-2*p^2)+mhom
-SSi<-rowSums(dum,na.rm=TRUE) #apply(dum,1,sum,na.rm=TRUE)
+SSi<-apply(dum,1,sum,na.rm=TRUE)
 
 dum1<-nal*(sweep(p,1,pb))^2
-SSP<-2*rowSums(dum1,na.rm=TRUE) #apply(dum1,1,sum,na.rm=TRUE)
+SSP<-2*apply(dum1,1,sum,na.rm=TRUE)
 
 ntalb<-rep(npl,alploc)   #corrects for untyped samples at a locus
 

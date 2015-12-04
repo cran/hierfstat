@@ -1,4 +1,35 @@
-#version 0.04-13 25.09.2014
+#version 0.04-22 04.12.2015
+-put DOI in between <>
+
+#version 0.04-21 04.12.2015
+-added DOI of yang paper in DESCRIPTION file
+
+#version 0.04-20 24.11.2015
+-fixed bug in pairwise.neifst when population is a factor
+-New function genind2hierfstat to read genind objects
+-several hierfstat functions (basic.stats, wc,...) now read genind objects from adegenet
+-new function to write ped files (plink) and bayescan files
+-new function for pairwise fst:  pairwise.WCfst 
+
+
+#version 0.04-18 16.10.2015
+-fixed bugs in plot.indpca, genet.dist
+-added a function to compte corrected Assignment indexs (AIc)
+-added a function to test for sex biased dispersal
+-added a function to read output from quantinemo
+-added an example output quantinemo file
+
+#version 0.04-16 14.09.2015
+-fixed several bugs
+-finite and non equilibrium island model can be generated with sim.genot.t
+-added pairwise FST (Nei87 and WC84) as geentic distances in genet.dist
+
+
+#version 0.04-15 30.09.2014
+-fixed a bug in basic.stats, when only one population with index 2, caused a non conformable array error message. 
+Now add 1 to the last element of the population vector
+
+#version 0.04-14 25.09.2014
 -Modified sim.genot to allow for different island sizes and independant inbreeding coefficient
 
 #version 0.04-12 06.02.2014
