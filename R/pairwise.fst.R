@@ -1,8 +1,12 @@
 ###################################################
 #'
-#' @title Estimate pairwise FSTs according to Nei (1987)
+#' Estimates pairwise FSTs according to Nei (1987)
 #'
-#' @description Estimate pairwise FSTs according to Nei (1987)
+#' Estimate pairwise FSTs according to Nei (1987)
+#' 
+#' FST are calculated using Nei (87) equations for FST', as described in the note 
+#' section of  \link{basic.stats}
+#' 
 #' 
 #' @usage pairwise.neifst(dat,diploid=TRUE)
 #' 
@@ -10,8 +14,6 @@
 #' @param diploid whether the data is from a diploid (default) or haploid organism
 #' 
 #' @return A matrix of pairwise FSTs
-#' 
-#' @details FST are calculated using Nei (87) equations for FST', as described in the note section of  \link{basic.stats}
 #' 
 #' @references Nei, M. (1987) Molecular Evolutionary Genetics. Columbia University Press
 #' 
@@ -53,9 +55,9 @@ fstmat
 ####################################################################
 ###################################################
 #'
-#' @title Estimate pairwise FSTs according to Weir and Cockerham (1984)
+#' Estimates pairwise FSTs according to Weir and Cockerham (1984)
 #'
-#' @description Estimate pairwise FSTs according to Weir and Cockerham (1984)
+#' Estimates pairwise FSTs according to Weir and Cockerham (1984)
 #' 
 #' @usage pairwise.WCfst(dat,diploid=TRUE)
 #' 
@@ -69,7 +71,7 @@ fstmat
 #' @references 
 #' Weir, B.S. (1996) Genetic Data Analysis II. Sinauer Associates.
 #' 
-#' \href{http://www.jstor.org/stable/2408641?seq=1#references_tab_contents}{Weir B.S. and Cockerham C.C. (1984)} Estimating F-Statistics for the Analysis of Population Structure. Evolution 38:1358 
+#' \href{http://www.jstor.org/stable/2408641}{Weir B.S. and Cockerham C.C. (1984)} Estimating F-Statistics for the Analysis of Population Structure. Evolution 38:1358 
 #' 
 #'           
 #' @author Jerome Goudet \email{jerome.goudet@@unil.ch}

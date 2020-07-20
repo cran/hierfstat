@@ -1,3 +1,6 @@
+################
+#'@export
+################
 "read.fstat" <-
 function (fname, na.s = c("0","00","000","0000","00000","000000","NA"))
 {
@@ -11,6 +14,9 @@ names(dat)<-lnames
 return(dat)
 }
 ############################################################################################
+################
+#' @export
+################
 getal<-function(data){
         #transform a table of genotypes into a table of alleles
 		#following anders Goncalves suggestion, replaced nbpop<-max(dat[,1]) with length(unique(dat[,1]))
@@ -18,13 +24,16 @@ getal<-function(data){
 		#caught exception when encoding alleles with more than 3 digits but only using allele 1-9
     #added sort to loop following simon forsberg email 
 if (is.genind(data)) data<-genind2hierfstat(data)
+nc<-dim(data)[2]
+true.loci<-2:nc
+if (names(data)[nc]=="dummy.loc") true.loci<-2:(nc-1) 
 x<-dim(data)
-if (max(data[,2],na.rm=TRUE)>1000000) stop("allele encoding with 3 digits maximum")
-if (max(data[,2],na.rm=TRUE)<1000000) modulo<-1000
-if (max(data[,2],na.rm=TRUE)<10000) {
-if (min(data[,2]%/%100,na.rm=TRUE)>=10 & max(data[,2]%%100,na.rm=TRUE)<10) modulo<-1000 else modulo<-100
+if (max(data[,true.loci],na.rm=TRUE)>1000000) stop("allele encoding with 3 digits maximum")
+if (max(data[,true.loci],na.rm=TRUE)<1000000) modulo<-1000
+if (max(data[,true.loci],na.rm=TRUE)<10000) {
+if (min(data[,true.loci]%/%100,na.rm=TRUE)>=10 & max(data[,true.loci]%%100,na.rm=TRUE)<10) modulo<-1000 else modulo<-100
 }
-if (max(data[,2],na.rm=TRUE)<100) modulo<-10
+if (max(data[,true.loci],na.rm=TRUE)<100) modulo<-10
 firstal<-data[,-1] %/% modulo
 secal<-data[,-1] %% modulo
 ind<-vector(length=0)
@@ -40,16 +49,19 @@ names(data.al)[-c(1:2)]<-names(data)[-1]
 return(data.al)
 }
 #########################################################################
+################
+#' @export
+################
 getal.b<-function(data){
   if (is.genind(data)) data<-genind2hierfstat(data)
   
 x<-dim(data)
-if (max(data[,2],na.rm=TRUE)>1000000) stop("allele encoding with 3 digits maximum")
-if (max(data[,2],na.rm=TRUE)<1000000) modulo<-1000
-if (max(data[,2],na.rm=TRUE)<10000) {
-if (min(data[,2]%/%100,na.rm=TRUE)>=10 & max(data[,2]%%100,na.rm=TRUE)<10) modulo<-1000 else modulo<-100
+if (max(data[,-1],na.rm=TRUE)>1000000) stop("allele encoding with 3 digits maximum")
+if (max(data[,-1],na.rm=TRUE)<1000000) modulo<-1000
+if (max(data[,-1],na.rm=TRUE)<10000) {
+if (min(data[,-1]%/%100,na.rm=TRUE)>=10 & max(data[,2]%%100,na.rm=TRUE)<10) modulo<-1000 else modulo<-100
 }
-if (max(data[,2],na.rm=TRUE)<100) modulo<-10
+if (max(data[,-1],na.rm=TRUE)<100) modulo<-10
 firstal<-data %/% modulo
 secal<-data %% modulo
 y<-array(dim=c(x,2))
@@ -58,31 +70,40 @@ y[,,2]<-as.matrix(secal)
 return(y)
 }
 #########################################################################
+################
+#' @export
+################
 pop.freq<-function(data,diploid=TRUE)
 {
-  if (is.genind(data)) data<-genind2hierfstat(data)
-  
-nbpop<-length(unique(data[,1]))
+if (is.genind(data)) data<-genind2hierfstat(data)
 nbloc<-dim(data)[2]-1
+nbind<-dim(data)[1]
+dumal<-9
+nbal<-as.vector(unique(nb.alleles(data.frame(rep(1,nbind),data[,-1]))))
+if (length(nbal)==1 & nbal[1]==dumal) dumal<-8
 if (diploid) {
-data<-data.frame(data,dummy.loc=(sample(9,replace=TRUE,size=dim(data)[1])+100)*1001) #to ensure proper output
+data<-data.frame(data,dummy.loc=(sample(dumal,replace=TRUE,size=dim(data)[1])+100)*1001) #to ensure proper output
 data<-getal(data)[,-2]
 }
 else{
-data<-data.frame(data,dummy.loc=sample(9,replace=TRUE,size=dim(data)[1])+100)
+data<-data.frame(data,dummy.loc=sample(dumal,replace=TRUE,size=dim(data)[1])+100)
 }
 freq<-function(x){
 #factor(x) necessary for funny allele encoding, but DOES slow down things
   if (is.character(x)) dum<-table(factor(x),data[,1]) else dum<-(table(x,data[,1]))
   eff<-colSums(dum,na.rm=TRUE)
-  freq<-sweep(dum,2,eff,FUN="/")
+  sweep(dum,2,eff,FUN="/")
 }
 ndat<-data[,-1]
 all.freq<-apply(ndat,2,freq)
-all.freq<-all.freq[-(nbloc+1)]
+if (is.list(all.freq)) all.freq<-all.freq[-(nbloc+1)]
+else stop("error in frequency estimation. Exiting")
 return(all.freq)
 }
 #########################################################################
+################
+#' @export
+################
 ind.count<-function(data){
  dum<-function(x){
   a<-which(!is.na(x))
@@ -91,10 +112,10 @@ ind.count<-function(data){
  if (is.genind(data)) data<-genind2hierfstat(data)
  
  data[,1]<-factor(data[,1])
- apply(data[,-1],2,dum)
+apply(data[,-1],2,dum)
 }
 #########################################################################
-  ind.count.n<-function(data){
+ind.count.n<-function(data){
   #should replace ind.count for ill behaved loci, e.g. many weird alleles
     dum<-function(x){
       a<-!is.na(x)
@@ -108,6 +129,9 @@ ind.count<-function(data){
   }
 
 #########################################################################
+################
+#' @export
+################
 allele.count<-function(data,diploid=TRUE)
 {
   if (is.genind(data)) data<-genind2hierfstat(data)
@@ -134,6 +158,9 @@ all.count<-dum
 return(all.count)
 }
 #########################################################################
+################
+#' @export
+################
 nb.alleles<-function(data,diploid=TRUE){
 if (is.genind(data)) data<-genind2hierfstat(data)
   
@@ -146,6 +173,9 @@ rownames(res)<-names(data)[-1]
 return(res)
 }
 ########################################################################
+################
+#' @export
+################
 allelic.richness<-function (data, min.n = NULL, diploid = TRUE) 
 {
     raref <- function(x) {
@@ -155,6 +185,8 @@ allelic.richness<-function (data, min.n = NULL, diploid = TRUE)
         return(sum(1 - dum))
     }
     if (is.genind(data)) data<-genind2hierfstat(data)
+    if (dim(data)[2] == 2) 
+      data <- data.frame(data, dummy.loc = data[, 2])
     nloc <- dim(data[, -1])[2]
     all.count <- allele.count(data, diploid)
     if (is.null(min.n)) {
@@ -165,18 +197,23 @@ allelic.richness<-function (data, min.n = NULL, diploid = TRUE)
     }
     a <- lapply(all.count, fun1 <- function(x) apply(x, 2, raref))
     Ar <- matrix(unlist(a), nrow = nloc, byrow = TRUE)
+    Ar<-data.frame(Ar)
     rownames(Ar) <- names(data)[-1]
-	mynas<-which(is.na(t(ind.count(data))))
+    colnames(Ar)<-names(table(data[,1]))
+	mynas<-which(is.na(t(ind.count(data))),arr.ind=TRUE)
 	Ar[mynas]<-NA
     return(list(min.all = min.n, Ar = Ar))
 }
 #########################################################################
+################
+#' @export
+################
 basic.stats<-function(data,diploid=TRUE,digits=4){
 # TODO : define plot functions for basic.stats
-  if (is.genind(data)) data<-genind2hierfstat(data)
-  loc.names<-names(data)[-1]
+if (is.genind(data)) data<-genind2hierfstat(data)
 if (length(table(data[,1]))<2) data[dim(data)[1]+1,1]<-data[dim(data)[1],1]+1
 if(dim(data)[2]==2) data<-data.frame(data,dummy.loc=data[,2])
+loc.names<-names(data)[-1]
 p<-pop.freq(data,diploid)
 n<-t(ind.count(data))
 if (diploid){
@@ -238,7 +275,7 @@ overall[10]<-overall[6]/(1-overall[2])
 names(overall)<-names(res)
 if(!diploid){
 #  res[,-2]<-NA
-  overall[-2]<-NA
+  overall[c(1,9)]<-NA
 }
 all.res<-list(n.ind.samp=n,pop.freq=lapply(p,round,digits),
 Ho=round(sHo,digits),Hs=round(Hs,digits),Fis=round(Fis,digits),
@@ -247,98 +284,18 @@ class(all.res)<-"basic.stats"
 all.res
 }
 
+#' @method print basic.stats
+#' @export 
 print.basic.stats<-function(x,...){
 print(list(perloc=x$perloc,overall=x$overall))
 invisible(x)
 }
-################################################################################
-pp.sigma.loc<-function(x,y,dat=dat,diploid=TRUE,...){
-  if (is.genind(dat)) dat<-genind2hierfstat(dat)
-  dum<-names(dat)[1]
-wpop<-dat[,1]==x | dat[,1]==y
-ndat<-dat[wpop,]
-ndat[ndat[,1]==x,1]<-1
-ndat[ndat[,1]==y,1]<-2
-return(wc(ndat,diploid,...)$sigma.loc)
-}
-################################################################################
 
-pp.fst<-function(dat=dat,diploid=TRUE,...){
-cl<-match.call()
-if (is.genind(dat)) dat<-genind2hierfstat(dat)
-dat<-dat[order(dat[,1]),]
-Pop<-dat[,1]
-npop<-length(unique(Pop))
-nloc<-dim(dat)[2]-1
-ppsl<-array(numeric(npop*npop*nloc*3),dim=c(npop,npop,nloc,3))
-for (i in 1:(npop-1))
-for (j in (i+1):npop){
-#cat(i," ",j,"\n") #for debugging
-# TODO: optimize by using function for 2 pops only. Needs a new function
-ppsl[i,j,,]<-as.matrix(pp.sigma.loc(unique(Pop)[i],unique(Pop)[j],dat,diploid,...))
-}
-ovl<-apply(ppsl,c(1,2,4),sum)
-ppfst<-ovl[,,1]/apply(ovl,c(1,2),sum)
-res<-list(call=cl,fst.pp=ppfst,vc.per.loc=ppsl)
-class(res)<-"pp.fst"
-res
-}
+#####################################################
 
-print.pp.fst<-function(x,...){
-print(x$fst.pp)
-invisible(x)
-}
 
-################################################################################
-
-boot.ppfst<-function(dat=dat,nboot=100,quant=c(0.025,0.975),diploid=TRUE,dig=4,...){
-cl<-match.call()
-if (is.genind(dat)) dat<-genind2hierfstat(dat)
-typ<-dim(dat)
-if(length(dim(dat))==2){
-#Pop<-dat[,1]
-npop<-length(table(dat[,1]))
-nloc<-dim(dat)[2]-1
-ppsl<-array(numeric(npop*npop*nloc*3),dim=c(npop,npop,nloc,3))
-x<-unique(dat[,1])
-for (i in x[-npop]) for (j in x[i+1]:x[npop]) {
-#cat(i," ",j,"\n") #for debugging
-ppsl[i,j,,]<-as.matrix(pp.sigma.loc(i,j,dat,diploid,...))
-}
-}
-else
+is.genind<-function (x) 
 {
-npop<-typ[1]
-nloc<-typ[3]
-ppsl<-dat
-}
-bppfst<-array(numeric(npop*npop*nboot),dim=c(npop,npop,nboot))
-for (i in 1:nboot){
-dum<-sample(nloc,replace=TRUE)
-ovl<-apply(ppsl[,,dum,],c(1,2,4),sum)
-bppfst[,,i]<-ovl[,,1]/apply(ovl,c(1,2),sum)
-}
-#browser()
-ll<-apply(bppfst,c(1,2),quantile,quant[1],na.rm=TRUE)
-hl<-apply(bppfst,c(1,2),quantile,quant[2],na.rm=TRUE)
-return(list(call=cl,ll=round(ll,digits=dig),ul=round(hl,digits=dig),vc.per.loc=ppsl))
-}
-################################################################################
-boot.ppfis<-function(dat=dat,nboot=100,quant=c(0.025,0.975),diploid=TRUE,dig=4,...){
-cl<-match.call()
-if (is.genind(dat)) dat<-genind2hierfstat(dat)
-bs<-basic.stats(dat)
-Ho<-bs$Ho
-Hs<-bs$Hs
-nloc<-dim(Hs)[1]
-npop<-dim(Hs)[2]
-my.boot<-matrix(numeric(nboot*npop),ncol=npop)
-for (i in 1:nboot){
-x<-sample(nloc,replace=TRUE)
-my.boot[i,]<-1-colSums(Ho[x,],na.rm=TRUE)/colSums(Hs[x,],na.rm=TRUE)
-}
-ll<-apply(my.boot,2,quantile,quant[1],na.rm=TRUE)
-hl<-apply(my.boot,2,quantile,quant[2],na.rm=TRUE)
-res<-data.frame(ll=ll,hl=hl)
-return(list(call=cl,fis.ci=round(res,digits=dig)))
+  res <- (methods::is(x, "genind") & methods::validObject(x))
+  return(res)
 }

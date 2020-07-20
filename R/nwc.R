@@ -1,3 +1,5 @@
+###
+#'@export
 #########################################################################
 wc<-function(ndat,diploid=TRUE,pol=0.0){
 
@@ -23,6 +25,7 @@ pop<-ndat[,1]
 ni<-length(pop)
 #polym<-which(bs$perloc$Ht>=pol,arr.ind=TRUE)
 dat<-ndat#[,c(1,polym+1)]
+if (dim(dat)[2]==2) dat<-dat[,c(1,2,2)]
 loc.names<-names(dat)[-1]
 n<-t(ind.count(dat))
 nt<-apply(n,1,sum,na.rm=TRUE)
@@ -110,8 +113,8 @@ sigloc<-data.frame(sigloc)
 names(sigloc)=c("lsiga","lsigb","lsigw")
 rownames(sigloc)<-loc.names
 
-lFST<-apply(cbind(lsiga,lsigb,lsigw),1,Fxy)
-lFIS<-apply(cbind(lsigb,lsigw),1,Fxy)
+lFST<-apply(sigloc,1,Fxy)
+lFIS<-apply(sigloc[,-1],1,Fxy)
 
 tsiga<-sum(siga,na.rm=TRUE)
 tsigb<-sum(sigb,na.rm=TRUE)
@@ -119,23 +122,25 @@ tsigw<-sum(sigw,na.rm=TRUE)
 tFST<-Fxy(c(tsiga,tsigb,tsigw))
 tFIS<-Fxy(c(tsigb,tsigw))
 
-res<-list(call=cl,sigma=cbind(loc,siga,sigb,sigw),
+res<-list(call=cl,sigma=data.frame(loc,siga,sigb,sigw),
 sigma.loc=sigloc,
-per.al=list(FST=FST.pal,FIS=FIS.pal),
-per.loc=list(FST=lFST,FIS=lFIS),
+per.al=data.frame(FST=FST.pal,FIS=FIS.pal),
+per.loc=data.frame(FST=lFST,FIS=lFIS,row.names=loc.names),
 FST=tFST,FIS=tFIS)
 
 if (!diploid){
-res<-list(call=cl,sigma=cbind(loc,siga,sigb,sigw),
-sigma.loc=sigloc,
-per.al=list(FST=FST.pal),
-per.loc=list(FST=lFST),
+res<-list(call=cl,sigma=data.frame(loc,siga,sigb),
+sigma.loc=sigloc[,-3],
+per.al=data.frame(FST=FST.pal),
+per.loc=data.frame(FST=lFST,row.names=loc.names),
 FST=tFST,FIS=NA)
 }
 class(res)<-"wc"
 res
 }
 
+#' @method print wc
+#' @export
 print.wc<-function(x,...){
 print(list(FST=x$FST,FIS=x$FIS))
 invisible(x)

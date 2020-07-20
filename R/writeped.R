@@ -1,6 +1,6 @@
-#' @title Write ped file plink analysis
+#' @title Write ped file for analyses with PLINK
 #' @description write a ped and a map file suitable for analysis with 
-#' \href{plink}{http://pngu.mgh.harvard.edu/~purcell/plink/} 
+#' \href{https://www.cog-genomics.org/plink2}{PLINK} 
 #' @usage write.ped(dat, ilab = NULL, pop = NULL, 
 #'         fname = "dat",na.str="0",f.id=NULL,m.id=NULL,loc.pos=NULL,sex=NULL) 
 #' @param dat a hierfstat data frame
@@ -14,8 +14,8 @@
 #' @param sex the individual sex. default to unknown
 #' @return a map file containing the loci positions 
 #' @return a ped file containing genotypes etc... 
-#' @references \href{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1950838/}{Purcell etal (2007) PLINK:} A Tool Set for Whole-Genome Association 
-#'  and Population-Based Linkage Analyses 81:559-575
+#' @references \href{https://academic.oup.com/gigascience/article/4/1/s13742-015-0047-8/2707533}{Chang et al. (2015)} 
+#' Second-generation PLINK: rising to the challenge of larger and richer datasets 
 #' @export  
 ####################################################################################
 write.ped<-function (dat, ilab = NULL, pop = NULL, fname = "dat",na.str="0",f.id=NULL,m.id=NULL,loc.pos=NULL,sex=NULL) 
@@ -36,7 +36,7 @@ write.ped<-function (dat, ilab = NULL, pop = NULL, fname = "dat",na.str="0",f.id
 	if(is.null(sex)) sex<-rep(0,nind)
     locnames <- paste("L", names(dat)[-1], sep = "")
 	mapf<-cbind(0,locnames,0,0)
-    write.table(mapf, paste(fname,".map",sep=""),quote=FALSE,sep="\t",row.names=FALSE,col.names=FALSE)
-	datn<-data.frame(fam.id=popid,ind.id=ilab,f.id=f.id,m.id=m.id,sex=sex,pheno=rep(0,nind),ddum)
-	write.table(datn,paste(fname,".ped",sep=""),row.names=FALSE,col.names=FALSE,sep="\t",quote=FALSE)
+    utils::write.table(mapf, paste(fname,".map",sep=""),quote=FALSE,sep="\t",row.names=FALSE,col.names=FALSE)
+	datn<-data.frame(fam.id=popid,ind.id=ind.id,f.id=f.id,m.id=m.id,sex=sex,pheno=rep(0,nind),ddum)
+	utils::write.table(datn,paste(fname,".ped",sep=""),row.names=FALSE,col.names=FALSE,sep="\t",quote=FALSE)
 }

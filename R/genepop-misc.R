@@ -1,41 +1,41 @@
 
 ########################################################################
-eucl.dist<-function(data,allloc=FALSE,distance="eucl"){
+#eucl.dist<-function(data,allloc=FALSE,distance="eucl"){
         #Calculates Euclidian distances from genetic data
-nbloc<-dim(data)[2]-2
-nbpop<-max(data[,1])
-euclmat<-matrix(nrow=(nbpop*(nbpop-1)/2),ncol=nbloc)
-for (i in 1:nbloc){
-     eff<-apply(table(data[,(i+2)],data[,1]),2,sum,na.rm=TRUE)
-     freq<-sweep(table(data[,(i+2)],data[,1]),2,eff,FUN="/")
-     eucl<-t(freq)%*%freq
-     dum<-0
-     for (j in 2:nbpop){
-     for (k in 1:(j-1)){
-         dum<-dum+1
-         euclmat[dum,i]<-eucl[j,j]+eucl[k,k]-2*eucl[j,k]
-     }
-     }
-}
-x<-apply(euclmat,1,sum,na.rm=TRUE)
-euclmat<-cbind(euclmat,x)
-if (allloc) {return(euclmat^0.5)} else {return(x^0.5)}
-}
+#nbloc<-dim(data)[2]-2
+#nbpop<-max(data[,1])
+#euclmat<-matrix(nrow=(nbpop*(nbpop-1)/2),ncol=nbloc)
+#for (i in 1:nbloc){
+#     eff<-apply(table(data[,(i+2)],data[,1]),2,sum,na.rm=TRUE)
+#     freq<-sweep(table(data[,(i+2)],data[,1]),2,eff,FUN="/")
+#     eucl<-t(freq)%*%freq
+#     dum<-0
+#     for (j in 2:nbpop){
+#     for (k in 1:(j-1)){
+#         dum<-dum+1
+#         euclmat[dum,i]<-eucl[j,j]+eucl[k,k]-2*eucl[j,k]
+#     }
+#     }
+#}
+#x<-apply(euclmat,1,sum,na.rm=TRUE)
+#euclmat<-cbind(euclmat,x)
+#if (allloc) {return(euclmat^0.5)} else {return(x^0.5)}
+#}
 ########################################################################
-eucl.dist.trait<-function(data){
+#eucl.dist.trait<-function(data){
 #calculate euclidian distance between populations for one trait
-nbpop<-max(data[,1])
-euclmat<-vector(length=(nbpop*(nbpop-1)/2))
-eff<-tapply(data[,2],data[,1],mean)
-     dum<-0
-     for (j in 2:nbpop){
-     for (k in 1:(j-1)){
-         dum<-dum+1
-         euclmat[dum]<-sqrt((eff[j]-eff[k])^2)
-     }
-     }
-return(euclmat)
-}
+#nbpop<-max(data[,1])
+#euclmat<-vector(length=(nbpop*(nbpop-1)/2))
+#eff<-tapply(data[,2],data[,1],mean)
+#     dum<-0
+#     for (j in 2:nbpop){
+#     for (k in 1:(j-1)){
+#         dum<-dum+1
+#         euclmat[dum]<-sqrt((eff[j]-eff[k])^2)
+#     }
+#     }
+#return(euclmat)
+#}
 ########################################################################
 #eucl.dist.mtrait<-function(data,corr=FALSE){
 #calculate euclidian distance between populations for multiple traits
@@ -57,6 +57,7 @@ return(euclmat)
 #return(x)
 #}
 ########################################################################
+
 cfe.dist<-function(data,allloc=FALSE,distance="cfe"){
         #Calculates Cavalli-Sforza & Edwards Chord distance, according to Nei, 1987 (p 216, eq 9.15)
         #Note  I used d=(1-cos(theta))^0.5, for a distance between 0 & 1, see Nei
@@ -80,6 +81,7 @@ cfemat<-cbind(cfemat,x)
 if (allloc) {return(cfemat)} else {return(x)}
 }
 ########################################################################
+
 da.dist<-function(data,allloc=FALSE,distance="da"){
         #Calculates Nei DA distance (Nei, 1986, p 216 eq 9.16)
 nbloc<-dim(data)[2]-2
@@ -104,6 +106,7 @@ if (allloc) {return(damat)} else {return(x)}
 }
 
 ########################################################################
+
 nei.dist<-function(data){
         #estimates Nei unbiased genetic distance (Nei, 1978)
 nbloc<-dim(data)[2]-2
@@ -148,37 +151,11 @@ return(-log(neivecn/(neivecd1*neivecd2)^0.5))
 #}
 
 #################################################################
-vec2mat<-function(x){
-	#fill a lower triangular matrix from a vector and copy it to upper triangle
-nn<-length(x)
-n<-(1+(1+8*nn)^0.5)/2 #dim of the matrix
-mat<-matrix(rep(0,n*n),ncol=n,nrow=n)
-cum<-0
-for (i in 2:n) {
-	for (j in 1:(i-1)){
-		cum<-cum+1
-		mat[i,j]<-x[cum]
-		mat[j,i]<-mat[i,j]
-	}
-}
-return(mat)
-}
-#################################################################
-mat2vec<-function(mat){
-#transform lower triangular matrix in vector 1.2,1.3,2.3,1.4,2.4,3.4 etc...
-n<-dim(mat)[2]
-nn<-n*(n-1)/2
-x<-vector(length=nn)
-cum<-0
-for (i in 2:n){
-for (j in 1:(i-1)){
-cum<-cum+1
-x[cum]<-mat[i,j]
-}}
-return(x)
-}
 
 #################################################################
+################
+#' @export
+################
 pcoa<-function(mat,plotit=TRUE,...){
 #principal coordinates analysis
 #as described in Legendre & lengendre Numerical Ecology, p 426
@@ -194,14 +171,14 @@ eig.delta<-eigen(delta)
 vec.delta<-eig.delta$vectors*matrix(rep(eig.delta$values^0.5,n),nrow=n,byrow=TRUE)
 inertia<-eig.delta$values/sum(eig.delta$values)
 if (plotit) {
-par(mfrow=c(2,2))
-plot(1:n,inertia);abline(h=0)
-plot(vec.delta[,1],vec.delta[,2],type="n",xlab=paste("First axis (inertia=",round(inertia[1],2),")",sep=""),ylab=paste("Second axis (inertia=",round(inertia[2],2),")",sep=""))
-text(vec.delta[,1],vec.delta[,2],...)
-plot(vec.delta[,1],vec.delta[,3],type="n",xlab=paste("First axis (inertia=",round(inertia[1],2),")",sep=""),ylab=paste("Third axis (inertia=",round(inertia[3],2),")",sep=""))
-text(vec.delta[,1],vec.delta[,3],...)
+graphics::par(mfrow=c(2,2))
+graphics::plot(1:n,inertia);graphics::abline(h=0)
+graphics::plot(vec.delta[,1],vec.delta[,2],type="n",xlab=paste("First axis (inertia=",round(inertia[1],2),")",sep=""),ylab=paste("Second axis (inertia=",round(inertia[2],2),")",sep=""))
+graphics::text(vec.delta[,1],vec.delta[,2],...)
+graphics::plot(vec.delta[,1],vec.delta[,3],type="n",xlab=paste("First axis (inertia=",round(inertia[1],2),")",sep=""),ylab=paste("Third axis (inertia=",round(inertia[3],2),")",sep=""))
+graphics::text(vec.delta[,1],vec.delta[,3],...)
 
-par(mfrow=c(1,1))
+graphics::par(mfrow=c(1,1))
 }
 
 naxes<-min(100,sum(eig.delta$values>1.0e-7)) #to limit to max 100 axes

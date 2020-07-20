@@ -25,10 +25,10 @@
 ##########################################################
 genind2hierfstat<-function(dat,pop=NULL){
   if (!is.genind(dat)) stop("dat must be a genind object. Exiting")
-
+  
   if(is.null(pop)){
     if (is.null(adegenet::pop(dat))){
-      stop("population factor must be defined")
+      stop("population factor must be defined") #warning instead of stop?
     } else {
       pop <- adegenet::pop(dat)
     }
@@ -38,34 +38,61 @@ genind2hierfstat<-function(dat,pop=NULL){
   ploid<-unique(dat@ploidy)
   if (length(ploid)!=1) stop("data must contain only diploids or only haploids. Exiting")
   if (ploid>2L) stop("Data must come from diploids or haploids. Exiting")
-  if (ploid==2L) diploid<-TRUE #diploid
-  if (ploid==1L) diploid<-FALSE #haploid
-  nucleotides<-c("A","C","G","T")
-  alleles.name<-toupper(names(table(unlist(dat@all.names))))
-  nuc<-FALSE
-  if(identical(alleles.name,nucleotides)) nuc<-TRUE
+  alleles.name<-toupper(unique(unlist(adegenet::alleles(dat))))
+  ids <- adegenet::indNames(dat)
   
-
-  x<-genind2df(dat,sep="",usepop=FALSE)
-  #to catch alleles encoded with letters, e.g. H3N2
-  if (length(grep("[A-Z]",alleles.name))==0) x<-as.matrix(data.frame(lapply(x,as.integer)))
-  else {
-    if (nuc){
-      
-      tmp<-lapply(x,function(a) gsub("A","1",a))
-      tmp<-lapply(tmp,function(a) gsub("C","2",a))
-      tmp<-lapply(tmp,function(a) gsub("G","3",a))
-      tmp<-lapply(tmp,function(a) gsub("T","4",a))
-      tmp<-lapply(tmp,function(a) gsub("a","1",a))
-      tmp<-lapply(tmp,function(a) gsub("c","2",a))
-      tmp<-lapply(tmp,function(a) gsub("g","3",a))
-      tmp<-lapply(tmp,function(a) gsub("t","4",a))
-      tmp<-lapply(tmp,as.numeric)
-      x<-as.matrix(data.frame(tmp))
+  # convert alleles
+  x <- if(!all(alleles.name %in% c("A", "C", "G", "T"))) {
+    if(length(grep("[[:alpha:]|[:punct:]]", alleles.name)) > 0) {
+      # for loci where alleles are not all numeric nor all nucleotides
+      max.length <- max(sapply(adegenet::alleles(dat), length))
+      digits <- floor(log10(max.length))
+      dat <- as.matrix(adegenet::genind2df(dat, sep = "", usepop = FALSE,
+                                 oneColPerAll = TRUE))
+      dat <- apply(dat, 2, function(a) ifelse(a == "NA", NA, a))
+      # cycle through each locus
+      do.call(cbind, lapply(seq(ploid, ncol(dat), by = ploid),
+            function(end) {
+             start <- end - ploid + 1
+             allelesid <- sort(unique(as.vector(dat[, start:end])))
+             # match alleles of each genotype with sorted order: index is new  allele
+             apply(dat[, start:end, drop = FALSE], 1, function(gntp) {
+                  if(any(is.na(gntp))) return(NA)
+                  gntp <- match(gntp, allelesid)
+                  # zero pad numeric alleles and return collapsed genotype
+                  gntp <- formatC(gntp, digits = digits, flag = "0", mode ="integer")
+                  as.integer(paste(gntp, collapse = ""))
+                  })
+            }))
     }
-    else (stop("alleles must be encoded as integers or nucleotides. Exiting"))
+    else { # all alleles are numeric
+      # check if all alleles code have same number of digits
+      tmp1<-unique(nchar(unlist(dat@all.names)))
+      if (length(tmp1)>1){
+        dig<-max(tmp1)
+        allnames<-lapply(dat@all.names,formatC,width=dig,flag="0",mode="integer")
+        dat@all.names<-allnames
+      }  
+      dat <- adegenet::genind2df(dat, sep = "", usepop = FALSE)
+      do.call(cbind, lapply(dat, as.integer))
+    }
+  } else { # all alleles are nucleotides
+    dat <- adegenet::genind2df(dat, sep = "", usepop = FALSE)
+    do.call(cbind, lapply(dat, function(a) {
+      a <- gsub("[aA]", "1", a)
+      a <- gsub("[cC]", "2", a)
+      a <- gsub("[gG]", "3", a)
+      a <- gsub("[tT]", "4", a)
+      as.integer(a)
+    }))
   }
   x<-data.frame(pop=pop,x)
+  rownames(x) <- ids
+  if(is.factor(pop) & nlevels(pop)==1){
+    dum1<-dim(dat)[1]
+    x[dum1+1,]<-NA
+    x[,1]<-factor(c(pop,"dumpop"))
+  rownames(x) <- c(ids,"dumind")
+  }
   return(x)
 }
-  

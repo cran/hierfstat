@@ -1,3 +1,6 @@
+##################
+#'@export
+###################
 write.fstat<-function(dat,fname="genotypes.dat"){
 # write a genotype data frame to a text file in fstat format
 # dat is a dataframe with pop of origin in first column, and genotypes after
@@ -12,16 +15,20 @@ if (nu < 10) nd<-1 else {if (nu<100 ) nd<-2}
 write(c(np,nl,nu,nd),fname)
 write(names(dat)[-1],fname,append=TRUE,ncolumns=1)
 dat[is.na(dat)]<-0
-write.table(dat,fname,append=TRUE,row.names=FALSE,col.names=FALSE,quote=FALSE,sep="\t")
+utils::write.table(dat,fname,append=TRUE,row.names=FALSE,col.names=FALSE,quote=FALSE,sep="\t")
 }
 #################################################################################
+##################
+#'@export
+###################
 subsampind <- function(dat,sampsize=10){
   # subsample sampsize individuals from each population
   # dat is a data frame with pop of origin in first column and genotypes in the following ones
   # sampsize is the sample size, per pop of origin
   
   x<-table(dat[,1])
-  if (min(x)<sampsize) warning(paste("At least one population contains [",min(x),"] individuals, less than the requested number [",sampsize,"].",
+  if (min(x)<sampsize) warning(paste("At least one population contains [",min(x),"] individuals, 
+                                     less than the requested number [",sampsize,"].",
      "\n Populations with fewer than [",sampsize,"] individuals are returned unchanged",sep=" "))
   csx<-cumsum(x)
   ll<-c(1,csx[-length(csx)]+1) #
@@ -45,15 +52,41 @@ subsampind <- function(dat,sampsize=10){
   return(data.frame(ddat[retain,]))
 }
 ################################
-write.struct<-function(dat,ilab=NULL,pop=NULL,fname="dat.str"){
-#write a file suitable to be read as an input for the program structure
+##################
+#'@export
+###################
+write.struct<-function(dat,ilab=NULL,pop=NULL,MARKERNAMES=FALSE,MISSING=-9,fname="dat.str"){
+#write a file suitable to be read as input for the structure program 
+#using 2 rows for each diploid individuals
 dum<-getal.b(dat[,-1])
-dum[is.na(dum)]<- -9
+dum[is.na(dum)]<- MISSING
 nind<-dim(dum)[1]
 nloc<-dim(dum)[2]
-popid<-dat[,1]
-locnames<-paste("L",names(dat)[-1],sep="",collapse=" ")
-write(locnames,fname)
+if (!is.null(pop)){
+  if (length(pop)==1) #e.g. TRUE, then 1st col of dat used as pop id
+    pop<-dat[,1]
+  if (length(pop)!=dim(dat)[1]){
+    pop<-NULL
+    warning("length of pop not identical to numbers of individuals \n
+            pop set to NULL")
+  }
+}
+if(!is.null(ilab)){
+  if (length(ilab)!=dim(dat)[1]){
+    ilab<-NULL
+    warning("length of ilab not identical to numbers of individuals \n
+            ilab set to NULL")
+  }
+}
+
+
+if (MARKERNAMES) {
+  locnames<-paste("L",names(dat)[-1],sep="",collapse=" ")
+  write(locnames,fname)
+}
+
+popid<-paste(ilab,pop,sep=" ")
+
 for (i in 1:nind){
 write(paste(popid[i],paste(dum[i,,1],collapse=" "),collapse=" "),fname,append=T)
 write(paste(popid[i],paste(dum[i,,2],collapse=" "),collapse=" "),fname,append=T)
