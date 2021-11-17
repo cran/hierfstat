@@ -3,8 +3,9 @@
 #' \href{https://www.cog-genomics.org/plink2}{PLINK} 
 #' @usage write.ped(dat, ilab = NULL, pop = NULL, 
 #'         fname = "dat",na.str="0",f.id=NULL,m.id=NULL,loc.pos=NULL,sex=NULL) 
-#' @param dat a hierfstat data frame
-#' @param ilab individal labels
+#' @param dat a hierfstat data frame. if pop=NULL, the first column should contain the population identifier, 
+#' otherwise it contains genotypes at the first locus
+#' @param ilab individual labels
 #' @param pop population id
 #' @param fname filename for ped file
 #' @param na.str character string to use for missing values
@@ -18,9 +19,9 @@
 #' Second-generation PLINK: rising to the challenge of larger and richer datasets 
 #' @export  
 ####################################################################################
-write.ped<-function (dat, ilab = NULL, pop = NULL, fname = "dat",na.str="0",f.id=NULL,m.id=NULL,loc.pos=NULL,sex=NULL) 
+write.ped<-function(dat, ilab = NULL, pop = NULL, fname = "dat",na.str="0",f.id=NULL,m.id=NULL,loc.pos=NULL,sex=NULL) 
 {
-    dum <- getal.b(dat[, -1])
+    if (is.null(pop)) dum <- getal.b(dat[, -1]) else dum<-getal.b(dat)
     dum[is.na(dum)] <- na.str
     nind <- dim(dum)[1]
     nloc <- dim(dum)[2]
@@ -34,7 +35,9 @@ write.ped<-function (dat, ilab = NULL, pop = NULL, fname = "dat",na.str="0",f.id
 	if(is.null(f.id))  f.id<-rep(0,nind) 
 	if(is.null(m.id)) m.id<-rep(0,nind)
 	if(is.null(sex)) sex<-rep(0,nind)
-    locnames <- paste("L", names(dat)[-1], sep = "")
+	
+  if (is.null(pop)) locnames <- paste("L", names(dat)[-1], sep = "") 
+	 else locnames <- paste("L", names(dat), sep = "")
 	mapf<-cbind(0,locnames,0,0)
     utils::write.table(mapf, paste(fname,".map",sep=""),quote=FALSE,sep="\t",row.names=FALSE,col.names=FALSE)
 	datn<-data.frame(fam.id=popid,ind.id=ind.id,f.id=f.id,m.id=m.id,sex=sex,pheno=rep(0,nind),ddum)

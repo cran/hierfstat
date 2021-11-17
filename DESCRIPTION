@@ -1,6 +1,6 @@
 Package: hierfstat
-Version: 0.5-7
-Date: 2020-07-20
+Version: 0.5-10
+Date: 2021-11-16
 Title: Estimation and Tests of Hierarchical F-Statistics
 Authors@R: c(person("Jerome","Goudet",role=c("aut","cre"),email="jerome.goudet@unil.ch"),
              person("Thibaut","Jombart",role="aut",email="t.jombart@imperial.ac.uk"),
@@ -30,8 +30,8 @@ License: GPL (>= 2)
 URL: https://www.r-project.org, https://github.com/jgx65/hierfstat
 BugReports: https://github.com/jgx65/hierfstat/issues
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2020-07-20 09:41:33 UTC; jgoudet
+Packaged: 2021-11-17 12:44:54 UTC; jgoudet
 Repository: CRAN
-Date/Publication: 2020-07-20 18:20:11 UTC
+Date/Publication: 2021-11-17 13:40:02 UTC

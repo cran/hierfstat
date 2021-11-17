@@ -4,19 +4,24 @@
 \alias{beta.dosage}
 \title{Estimates pairwise kinships and individual inbreeding coefficients from dosage data}
 \usage{
-beta.dosage(dos,inb=TRUE,Mb=FALSE)
+beta.dosage(dos,inb=TRUE,Mb=FALSE,MATCHING=FALSE)
 }
 \arguments{
-\item{dos}{A matrix of 0, 1 and 2s with loci (SNPs) in columns and individuals in rows. missing values are allowed}
+\item{dos}{A matrix of 0, 1 and 2s with loci (SNPs) in columns and individuals in rows. 
+Missing values are allowed}
 
 \item{inb}{whether individual inbreeding coefficient should be estimated (rather than self-coancestries)}
 
 \item{Mb}{whether to output the mean matching}
+
+\item{MATCHING}{if \code{MATCHING=FALSE}, \code{dos} is a (ni x nl) dosage matrix; 
+if \code{MATCHING=TRUE}, dos is a (ni x ni) matrix 
+of matching proportions, as obtained from a call to the \code{\link{matching}} function}
 }
 \value{
 if \code{Mb}=FALSE, a matrix of pairwise kinships and inbreeding coefficients (if \code{inb}=TRUE) or self-coancestries 
 (\code{inb}=FALSE);  
-if \code{Mb}=FALSE, a list with elements \code{inb} (whether inbreeding coefficients rather than kinships should 
+if \code{Mb}=TRUE, a list with elements \code{inb} (whether inbreeding coefficients rather than kinships should 
 be returned on the main diagonal),
 \code{MB} (the average off-diagonal matching) and \code{betas} the kinships or inbreeding coefficients.
 }
@@ -27,25 +32,40 @@ using Weir and Goudet (2017) beta estimator.
 \details{
 This function is written for dosage data, i.e., how many doses of an allele (0, 1 or 2) an individual carries.
 It should be use for bi-allelic markers only (e.g. SNPs), although you might "force" a k multiallelic locus to k biallelic
-loci.
+loci (see \code{\link{fstat2dos}}). 
 
-Matching proportion can be obtained by the following equation: \eqn{M=\beta*(1-Mb)+Mb}
+Matching proportions can be obtained by the following equation: \eqn{M=\beta*(1-Mb)+Mb} 
 
-By default (inb=TRUE) the inbreeding coefficient is returned on the main diagonal.  With inb=FALSE, self coancestries are reported.
+By default (\code{inb=TRUE}) the inbreeding coefficient is returned on the main diagonal.  
+With \code{inb=FALSE}, self coancestries are reported.
 
 
 Twice the betas with self-coancestries on the diagonal gives the Genomic Relationship Matrix (GRM)     
 
-Following a suggestion from Olivier Hardy, missing data are removed from the estimation procedure, rather than imputed (this is taken care off automatically)
+Following a suggestion from Olivier Hardy, missing data are removed from the estimation procedure, 
+rather than imputed (this is taken care off automatically)
 }
 \examples{
 \dontrun{
  dos<-matrix(sample(0:2,size=10000,replace=TRUE),ncol=100)
  beta.dosage(dos,inb=TRUE)
+ 
+ #matrix of kinship/inbreeding coeff
+ data(gtrunchier)
+ beta.dosage(fstat2dos(gtrunchier[,-c(1:2)]))
+ 
+ #individual inbreeding coefficients
+ dat<-sim.genot(size=100,nbloc=100,nbal=20,mig=0.01,f=c(0,0.3,0.7))
+ hist(diag(beta.dosage(fstat2dos(dat[,-1]))),breaks=-10:100/100,main="",xlab="",ylab="")
+ abline(v=c(0.0,0.3,0.7),col="red")
+ #only 20 loci
+ hist(diag(beta.dosage(fstat2dos(dat[,2:21]))),breaks=-5:20/20,main="",xlab="",ylab="")
+ abline(v=c(0.0,0.3,0.7),col="red")
+ 
 }
 }
 \references{
-\href{http://www.genetics.org/content/206/4/2085}{Weir, BS and Goudet J. 2017} A Unified Characterization 
+\href{https://www.genetics.org/content/206/4/2085}{Weir, BS and Goudet J. 2017} A Unified Characterization 
 of Population Structure and Relatedness. Genetics (2017) 206:2085 
 
 \href{https://onlinelibrary.wiley.com/doi/full/10.1111/mec.14833}{Goudet, J., Kay, T. and Weir BS. 2018} How to estimate kinship. 

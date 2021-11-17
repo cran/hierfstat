@@ -1,5 +1,5 @@
 ################
-#'@export
+#' @export
 ################
 "read.fstat" <-
 function (fname, na.s = c("0","00","000","0000","00000","000000","NA"))
@@ -36,11 +36,11 @@ if (min(data[,true.loci]%/%100,na.rm=TRUE)>=10 & max(data[,true.loci]%%100,na.rm
 if (max(data[,true.loci],na.rm=TRUE)<100) modulo<-10
 firstal<-data[,-1] %/% modulo
 secal<-data[,-1] %% modulo
-ind<-vector(length=0)
+ind<-NULL
 nbpop <- length(unique(data[,1]))
 for (i in sort(unique(data[,1]))) {
 dum<-1:sum(data[,1]==i)
-if (i==1) ind<-dum else ind<-c(ind,dum)
+ind<-c(ind,dum)
 }
 ind<-rep(ind,2)
 if (x[2]==2)  data.al<-data.frame(pop=rep(data[,1],2),ind=ind,al=c(firstal,secal))
@@ -53,15 +53,15 @@ return(data.al)
 #' @export
 ################
 getal.b<-function(data){
-  if (is.genind(data)) data<-genind2hierfstat(data)
+  if (is.genind(data)) data<-genind2hierfstat(data)[,-1]
   
 x<-dim(data)
-if (max(data[,-1],na.rm=TRUE)>1000000) stop("allele encoding with 3 digits maximum")
-if (max(data[,-1],na.rm=TRUE)<1000000) modulo<-1000
-if (max(data[,-1],na.rm=TRUE)<10000) {
-if (min(data[,-1]%/%100,na.rm=TRUE)>=10 & max(data[,2]%%100,na.rm=TRUE)<10) modulo<-1000 else modulo<-100
+if (max(data,na.rm=TRUE)>1000000) stop("allele encoding with 3 digits maximum")
+if (max(data,na.rm=TRUE)<1000000) modulo<-1000
+if (max(data,na.rm=TRUE)<10000) {
+if (min(data%/%100,na.rm=TRUE)>=10 & max(data[,2]%%100,na.rm=TRUE)<10) modulo<-1000 else modulo<-100
 }
-if (max(data[,-1],na.rm=TRUE)<100) modulo<-10
+if (max(data,na.rm=TRUE)<100) modulo<-10
 firstal<-data %/% modulo
 secal<-data %% modulo
 y<-array(dim=c(x,2))
@@ -69,11 +69,19 @@ y[,,1]<-as.matrix(firstal)
 y[,,2]<-as.matrix(secal)
 return(y)
 }
+
 #########################################################################
 ################
 #' @export
 ################
-pop.freq<-function(data,diploid=TRUE)
+pop.freq<-function(dat,diploid=TRUE){
+  lapply(allele.count(dat,diploid),function(x) sweep(x,2,colSums(x,na.rm=TRUE),FUN="/"))
+}
+#########################################################################
+################
+
+################
+pop.freq.o<-function(data,diploid=TRUE)
 {
 if (is.genind(data)) data<-genind2hierfstat(data)
 nbloc<-dim(data)[2]-1
@@ -205,6 +213,17 @@ allelic.richness<-function (data, min.n = NULL, diploid = TRUE)
     return(list(min.all = min.n, Ar = Ar))
 }
 #########################################################################
+# Basic diversity and differentiation statistics
+#
+# Estimates individual counts, allelic frequencies, observed heterozygosities 
+# and genetic diversities per locus and population.
+# Also Estimates mean observed heterozygosities, mean gene diversities within population Hs, 
+# Gene diversities overall Ht and corrected Htp, and Dst, Dstp.
+# Finally, estimates Fst and Fstp as well as Fis following Nei (1987) per locus and overall loci
+#
+# @aliases Hs, Ho, 
+#
+#
 ################
 #' @export
 ################
@@ -290,6 +309,23 @@ print.basic.stats<-function(x,...){
 print(list(perloc=x$perloc,overall=x$overall))
 invisible(x)
 }
+
+################
+#' @rdname basic.stats 
+#' @export
+################
+Hs<-function(data,...){
+  colMeans(basic.stats(data,...)$Hs,na.rm=TRUE)
+}
+
+################
+#' @rdname basic.stats 
+#' @export
+################
+
+Ho<-function(data,...){
+  colMeans(basic.stats(data,...)$Ho,na.rm=TRUE)
+}  
 
 #####################################################
 

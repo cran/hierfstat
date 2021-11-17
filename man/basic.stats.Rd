@@ -1,12 +1,19 @@
 \name{basic.stats}
 \alias{basic.stats}
+\alias{Hs}
+\alias{Ho}
 \alias{print.basic.stats}
-\title{Basic statistics}
+\title{Basic diversity and differentiation statistics}
 \description{Estimates individual counts, allelic frequencies, observed heterozygosities and genetic diversities per locus and population.
 Also Estimates mean observed heterozygosities, mean gene diversities within population Hs, Gene diversities overall Ht and corrected Htp, and Dst, Dstp.
 Finally, estimates Fst and Fstp as well as Fis following Nei (1987) per locus and overall loci}
 \usage{basic.stats(data,diploid=TRUE,digits=4)
+
 \method{print}{basic.stats}(x,...)
+
+Hs(data,...)
+
+Ho(data,...)
 }
 \arguments{
 \item{data}{a data frame where the first column contains the population to which the different individuals belong, and the following columns contain the genotype of the individuals -one locus per column- }
@@ -97,5 +104,7 @@ number and are corrected for heterozygosity.
 \examples{
 data(gtrunchier)
 basic.stats(gtrunchier[,-1])
+Hs(gtrunchier[,-2])
+Ho(gtrunchier[,-2])
 }
 \keyword{univar}

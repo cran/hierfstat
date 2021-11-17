@@ -4,6 +4,7 @@
 \alias{fs.dosage}
 \alias{fst.dosage}
 \alias{fis.dosage}
+\alias{pairwise.fst.dosage}
 \alias{plot.fs.dosage}
 \alias{print.fs.dosage}
 \title{Estimates F-statistics from dosage data}
@@ -17,6 +18,8 @@ fs.dosage(dos, pop, matching = FALSE)
 fst.dosage(dos, pop, matching = FALSE)
 
 fis.dosage(dos, pop, matching = FALSE)
+
+pairwise.fst.dosage(dos, pop, matching = FALSE)
 }
 \arguments{
 \item{dos}{either a matrix with snps columns and individuals in rows containing allelic dosage (number [0,1 or 2] of alternate alleles); 
@@ -38,10 +41,14 @@ Fi list of individual inbreeding coefficients, estimated with the reference bein
 FsM matrix containing population specific FSTs on the diagonal. The off diagonal elements contains the average of the kinships 
 for pairs of individuals, one from each population, relative to the mean kinship for pairs of individuals between populations.
 
-Fs The first row contains population specific and overall Fis, the second row population specific and overall Fst.
+Fst2x2 matrix containing pairwise FSTs
+
+Fs The first row contains population specific and overall Fis, the second row population specific 
+(average \eqn{\hat{\beta_{ST}^i}} over loci)  FSTs and overall Fst \eqn{\hat{\beta_{ST}}} (see Table 3 of 
+\href{https://www.genetics.org/content/206/4/2085}{Weir and Goudet, 2017 (Genetics)})
 }
 \description{
-Reports individual inbreeding coefficients, Population specific Fsts and Fiss from dosage data
+Reports individual inbreeding coefficients, Population specific and pairwise Fsts, and Fiss from dosage data
 }
 \section{Methods (by generic)}{
 \itemize{
@@ -58,9 +65,12 @@ Reports individual inbreeding coefficients, Population specific Fsts and Fiss fr
 }
 
 }
+\seealso{
+\code{\link{betas}}
+}
 \author{
 Jerome Goudet \email{jerome.goudet@unil.ch}
 
-\href{http://www.genetics.org/content/206/4/2085}{Weir, BS and Goudet J. 2017} A Unified Characterization 
+\href{https://www.genetics.org/content/206/4/2085}{Weir, BS and Goudet J. 2017} A Unified Characterization 
 of Population Structure and Relatedness. Genetics (2017) 206:2085
 }
