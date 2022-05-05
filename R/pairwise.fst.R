@@ -34,6 +34,7 @@
 #########################################################################
 
 pairwise.neifst <- function(dat,diploid=TRUE){
+  if (is.genind(dat)) dat<-genind2hierfstat(dat)
   dat<-dat[order(dat[,1]),]
   pops<-unique(dat[,1])
   npop<-length(pops)
@@ -91,6 +92,7 @@ fstmat
 #########################################################################
 
 pairwise.WCfst <- function(dat,diploid=TRUE){
+  if (is.genind(dat)) dat<-genind2hierfstat(dat)
   dat<-dat[order(dat[,1]),]
   pops<-unique(dat[,1])
   npop<-length(pops)
@@ -125,7 +127,7 @@ pairwise.WCfst <- function(dat,diploid=TRUE){
 #' 
 #' @author Jerome Goudet \email{jerome.goudet@@unil.ch}
 #' 
-#' \href{https://www.genetics.org/content/206/4/2085}{Weir, BS and Goudet J. 2017} A Unified Characterization 
+#' \href{https://academic.oup.com/genetics/article/206/4/2085/6072590}{Weir, BS and Goudet J. 2017} A Unified Characterization 
 #' of Population Structure and Relatedness. Genetics (2017) 206:2085 
 
 #' @examples

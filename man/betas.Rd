@@ -32,7 +32,7 @@ Hi Within population gene diversities (complement to 1 of matching probabilities
 Hb Between populations gene diversities
 
 betaiovl Average \eqn{\hat{\beta_{WT}^i}} over loci (Population specific FSTs), Table 3 of 
-\href{https://www.genetics.org/content/206/4/2085}{Weir and Goudet, 2017 (Genetics)}
+\href{https://academic.oup.com/genetics/article/206/4/2085/6072590}{Weir and Goudet, 2017 (Genetics)}
 
 betaW Average of the betaiovl \eqn{\hat{\beta_{WT}}} over loci (overall population FST)
 
@@ -70,7 +70,7 @@ graphics::image(1:120,1:120,ind.coan$betaij,xlab="Inds",ylab="Inds")
 
 }
 \references{
-\href{https://www.genetics.org/content/206/4/2085}{Weir and Goudet, 2017 (Genetics)} 
+\href{https://academic.oup.com/genetics/article/206/4/2085/6072590}{Weir and Goudet, 2017 (Genetics)} 
 A unified characterization of population structure and relatedness.
 }
 \seealso{
